@@ -48,7 +48,7 @@ if($array['rol']==1){
             text: "'.$array['Nom_User'].'",
             timer: 1200
           }).then(function(){
-            window.location = "../index.php";
+            window.location = "../dashboard.php";
           })
         </script>'; 
 }else

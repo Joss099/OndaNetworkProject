@@ -1,0 +1,43 @@
+.container-1{
+    display: grid;
+    width: 90% !important;
+    padding-top: 2rem;
+    padding-left: 1rem; 
+    grid-template-columns: 50% 50%;
+}
+
+.form-group label{
+    font-size: 0.85rem;
+    color: rgb(88, 57, 180) !important;
+}
+
+/* Contenedor izquierdo */
+.cont-izquierdo{
+    margin-left: 6rem;
+}
+
+.form-group .no_orden{
+    width: 4rem;
+}
+
+.form-group .proveedor {
+    width: 24rem;
+}
+
+.form-group .forma_pago{
+    width: 24rem;
+}
+
+.form-group .responsable{
+    width: 24rem;
+}
+/* Contenedor derecho */
+.cont-derecho{
+    margin-left: 4rem;
+}
+
+.form-group .fecha{
+    width: 10rem;
+}
+
+

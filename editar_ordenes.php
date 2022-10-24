@@ -12,7 +12,7 @@ if (empty(base64_decode($_REQUEST['id_orden']))) {
     header("location: ../login.php");
 }
 $id_orden = base64_decode($_REQUEST['id_orden']);
-$sql = "SELECT Num_Item, Desc_Item, Cnt_Item, Pre_Item, Tot_Item, Ord_Num from orden_detalle Where Num_Item = $id_orden";
+$sql = "SELECT orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, fecha_pag,Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE orden.Ord_Num = $id_orden";
 $query = mysqli_query($con, $sql);
 
 ?>
@@ -29,10 +29,11 @@ $query = mysqli_query($con, $sql);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Perfil</title>
+    <title>Ordenes</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/ordenes.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
 
@@ -200,24 +201,24 @@ $query = mysqli_query($con, $sql);
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <?php 
+                            <?php
                             $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
                             $query2 = mysqli_query($con, $sql2);
-                            while($row4=mysqli_fetch_array($query2)){
+                            while ($row4 = mysqli_fetch_array($query2)) {
                             ?>
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row4['Nom_User'] ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
-                            </a>
-
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row4['id']) ?>">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Perfil
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row4['Nom_User'] ?></span>
+                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                                 </a>
+
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row4['id']) ?>">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Perfil
+                                    </a>
                                 <?php
-                                }
+                            }
                                 ?>
                                 <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -228,7 +229,7 @@ $query = mysqli_query($con, $sql);
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cerrar Sesion
                                 </a>
-                            </div>
+                                </div>
                         </li>
 
                     </ul>
@@ -250,48 +251,65 @@ $query = mysqli_query($con, $sql);
 
                     </div>
 
-                    <!-- Datos del usuario -->
-                    <?php
-                    while ($row = mysqli_fetch_array($query)) {
-                    ?>
+                    <!-- Datos de la orden -->
+                    <div class="card shadow mb-4">
+                        <div class="container-1">
+                            <div class="cont-izquierdo">
+                                <form action="">
+                                    <?php 
+                                    while($row = mysqli_fetch_array($query)){
+                                    ?>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">No. Orden</label>
+                                        <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="" id="" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Proveedor</label>
+                                        <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="" id="" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Forma de Pago</label>
+                                        <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="" id="" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Responsable</label>
+                                        <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Reglon Presupuestario</label>
+                                        <input value="<?php echo $row['Descripcion del Reglon'] ?>"type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    </div>
+                            </div>
 
-                        <div class="card shadow mb-4 usuario-st" style="padding: 2rem 25rem 6rem 25rem">
-                            <div>
-                                <form action="utilidades/editar-orden.php?id_orden=<?php echo base64_encode($row['Num_Item']) ?>" method="POST">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Descripcion</label>
-                                        <input value="<?php echo $row['Desc_Item'] ?>" type="text" class="form-control" name="desc_orden" id="desc_orden" aria-describedby="emailHelp" disabled autocomplete="off">
-                                        <small id="emailHelp" class="form-text text-muted"></small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Cantidad</label>
-                                        <input value="<?php echo $row['Cnt_Item'] ?>" type="text" class="form-control" name="cant_orden" id="cant_orden" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Precio</label>
-                                        <input type="text" class="form-control" name="precio_orden" value="<?php echo $row['Pre_Item']; ?>" id="precio_orden" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Total</label>
-                                        <input type="text" class="form-control" name="total_orden" value="<?php echo $row['Tot_Item']; ?>" id="total_orden" disabled>
-                                    </div>
-                                    <?php } ?>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" onclick="habilitar();">
-                                        <label class="form-check-label" for="exampleCheck1">Editar campos</label>
-                                    </div>
-                                    <br>
-                                    <button type="submit" class="btn btn-primary"" id="guardar" disabled>Guardar</button>
+                            <div class="cont-derecho">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Fecha</label>
+                                    <input value="<?php echo $row['Fecha'] ?>" type="text" class="form-control fecha" name="usuario" id="usuario" autocomplete="off" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Fecha de Pago</label>
+                                    <input value="<?php echo $row['fecha_pag'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Presupuesto</label>
+                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                </div>
+                                <?php
+                                }
+                                ?>
                                 </form>
                             </div>
                         </div>
 
+                    </div>
+
+                    <!-- Datos de la orden -->
+
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
-            <!-- End of Main Content -->
-
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
