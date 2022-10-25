@@ -12,7 +12,7 @@ if (empty(base64_decode($_REQUEST['id_orden']))) {
     header("location: ../login.php");
 }
 $id_orden = base64_decode($_REQUEST['id_orden']);
-$sql = "SELECT orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Num_Item = $id_orden order by orden.Ord_Num";
+$sql = "SELECT Num_Item, Pre_Item, Tot_Item, orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Num_Item = $id_orden order by orden.Ord_Num";
 $query = mysqli_query($con, $sql);
 
 if (!isset($query)) {
@@ -272,124 +272,162 @@ if (!isset($query)) {
                                     while ($row = mysqli_fetch_array($query)) {
                                     ?>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">No. Orden</label>
+                                            <label for="exampleInput">No. Orden</label>
                                             <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="" id="" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Proveedor</label>
+                                            <label for="exampleInput">Proveedor</label>
                                             <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="" id="" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Forma de Pago</label>
+                                            <label for="exampleInput">Forma de Pago</label>
                                             <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="" id="" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Responsable</label>
+                                            <label for="exampleInput">Responsable</label>
                                             <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="usuario" id="usuario" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Reglon Presupuestario</label>
+                                            <label for="exampleInput">Reglon Presupuestario</label>
                                             <input value="<?php echo $row['Descripcion del Reglon'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
                                         </div>
                             </div>
 
                             <div class="cont-derecho">
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Fecha</label>
+                                    <label for="exampleInput">Fecha</label>
                                     <input value="<?php echo $row['Fecha'] ?>" type="text" class="form-control fecha" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Fecha de Pago</label>
+                                    <label for="exampleInput">Fecha de Pago</label>
                                     <input value="<?php echo $row['fecha_pag'] ?>" type="text" class="form-control fecha_pago" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Presupuesto</label>
+                                    <label for="exampleInput">Presupuesto</label>
                                     <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
-                                    <?php
-                                    }
-                            ?>
-                                </form>
                             </div>
+                        </div><br>
+                        <div class="container-table">
+                            <table class='table' id=''>
+                                <thead class='' style='background-color: rgb(26,54,78); color: white;'>
+                                    <tr>
+                                        <th class='' scope='col'>No.</th>
+                                        <th class='' style='width: 400px' scope='col'>Descripcion</th>
+                                        <th class='' scope='col'>Cantidad</th>
+                                        <th class='' scope='col'>Precio</th>
+                                        <th class='' scope='col'>Impuesto</th>
+                                        <th class='' scope='col'>Total</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center numero" type="text" value="<?php echo $row['Num_Item'] ?>" disabled></td>
+                                        <td style='font-size: 13px' class='text-center'><input class="form-control" type="text" value="<?php echo $row['Desc_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center cantidad" type="text" value="<?php echo $row['Cnt_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center precio" type="text" value="<?php echo $row['Pre_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center" type="checkbox" checked disabled></td>
+                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center total" type="text" value="<?php echo $row['Tot_Item'] ?>" disabled></td>
+                                    </tr>
+                            </table>
+
+                            <div class="container-1">
+                                <div class="container-izq">
+                                    <div class="form-group">
+                                        <label for="exampleInput">Descripcion</label>
+                                        <input value="<?php echo $row['Desc_Item'] ?>" type="text" class="form-control descripcion2" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    </div>
+                                </div>
+                                <div class="container-der">
+                                    <div class="form-group">
+                                        <label for="exampleInput">Observaciones</label>
+                                        <input value="<?php echo $row['Observaciones'] ?>" type="text" class="form-control observaciones" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    </div>
+                                </div>
+                                <br><br>
+                            </div>
+
+                        <?php
+                                    }
+                        ?>
+                        </form>
+
                         </div>
 
+                        <!-- Datos de la orden -->
+
                     </div>
 
-                    <!-- Datos de la orden -->
-
                 </div>
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Onda Network 2022</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
 
             </div>
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Onda Network 2022</span>
+            <!-- End of Content Wrapper -->
+
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">¿Quieres cerrar sesion?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Seleccione "Cerrar sesión" a continuación si está listo para finalizar su sesión actual.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <a class="btn btn-danger" href="utilidades/salir.php">Cerrar Sesion</a>
                     </div>
                 </div>
-            </footer>
-            <!-- End of Footer -->
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">¿Quieres cerrar sesion?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Seleccione "Cerrar sesión" a continuación si está listo para finalizar su sesión actual.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-danger" href="utilidades/salir.php">Cerrar Sesion</a>
-                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Script para editar usuarios -->
+        <!-- Script para editar usuarios -->
 
-    <script>
-        function habilitar() {
-            var check = document.getElementById('exampleCheck1');
-            if (check.checked) {
-                document.getElementById('desc_orden').disabled = false;
-                document.getElementById('cant_orden').disabled = false;
-                document.getElementById('precio_orden').disabled = false;
-                document.getElementById('guardar').disabled = false;
-                document.getElementById('total_orden').disabled = false;
+        <script>
+            function habilitar() {
+                var check = document.getElementById('exampleCheck1');
+                if (check.checked) {
+                    document.getElementById('desc_orden').disabled = false;
+                    document.getElementById('cant_orden').disabled = false;
+                    document.getElementById('precio_orden').disabled = false;
+                    document.getElementById('guardar').disabled = false;
+                    document.getElementById('total_orden').disabled = false;
 
-            } else {
-                document.getElementById('desc_orden').disabled = true;
-                document.getElementById('cant_orden').disabled = true;
-                document.getElementById('precio_orden').disabled = true;
-                document.getElementById('guardar').disabled = true;
-                document.getElementById('total_orden').disabled = true;
+                } else {
+                    document.getElementById('desc_orden').disabled = true;
+                    document.getElementById('cant_orden').disabled = true;
+                    document.getElementById('precio_orden').disabled = true;
+                    document.getElementById('guardar').disabled = true;
+                    document.getElementById('total_orden').disabled = true;
+                }
             }
-        }
-    </script>
+        </script>
 </body>
 
 </html>

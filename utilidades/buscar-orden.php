@@ -33,7 +33,7 @@
                         <td class='text-center'>".$fila['Pre_Item']."</td>
                         <td class='text-center'>".$fila['Tot_Item']."</td>
                         <td class='text-center'>".$fila['Ord_Num']."</td>
-                        <td class='text-center'><a href='editar_ordenes.php?id_orden=".base64_encode($fila['Num_Item'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
+                        <td class='text-center'><a href='editar_detalle.php?id_orden=".base64_encode($fila['Num_Item'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
                         <a href='utilidades/eliminar-orden.php?id_orden=".$fila['Num_Item']."' class='btn btn-danger'><i class='fas fa-trash'></i></a></td>
                         </tr>";
         }     

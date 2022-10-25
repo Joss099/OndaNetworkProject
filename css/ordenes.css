@@ -1,7 +1,7 @@
 .container-1{
     display: grid;
     width: 90% !important;
-    padding-top: 2rem;
+    padding-top: 1.4rem;
     padding-left: 1rem; 
     grid-template-columns: 50% 50%;
 }
@@ -13,7 +13,8 @@
 
 /* Contenedor izquierdo */
 .cont-izquierdo{
-    margin-left: 6rem;
+    margin-left: 8rem;
+    
 }
 
 .form-group .no_orden{
@@ -33,7 +34,8 @@
 }
 /* Contenedor derecho */
 .cont-derecho{
-    margin-left: 4rem;
+    justify-content: end !important;
+    margin-left: 6rem;
 }
 
 .form-group .fecha{
@@ -47,5 +49,38 @@
 .form-group .presupuesto{
     width: 13rem;
 }
+
+.container-table{
+    padding-left: 4.6rem;
+    width: 75vw;
+}
+
+.form-group .observaciones{
+    width: 15rem;
+}
+
+.cantidad{
+    width: 4rem !important;
+}
+
+.precio{
+    width: 4rem !important;
+}
+
+.total{
+    width: 4rem !important;
+}
+
+.numero{
+    width: 4rem !important;
+}
+
+.descripcion2{
+    width: 25rem !important;
+}
+
+
+
+
 
 
