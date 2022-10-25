@@ -6,7 +6,7 @@
     if(isset($_POST['consulta'])){
     $q = $con->real_escape_string($_POST['consulta']);
     //Se inserta el parametro en la nueva busqueda
-    $sql4 = "SELECT orden.Ord_Num,Num_Item, Fecha, Desc_Item, Cnt_Item, Tot_Item, Nom_Prov, Nom_User, Desc_Orden from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join usuarios on usuarios.id = orden.Id_User inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Desc_Item LIKE '%".$q."%' OR Nom_User LIKE '%".$q."%' OR Nom_Prov LIKE '%".$q."%'";
+    $sql4 = "SELECT orden.Ord_Num,Num_Item, date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Item, Cnt_Item, Tot_Item, Nom_Prov, Nom_User, Desc_Orden from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join usuarios on usuarios.id = orden.Id_User inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Desc_Item LIKE '%".$q."%' OR Nom_User LIKE '%".$q."%' OR Nom_Prov LIKE '%".$q."%'";
     }
 
     $result = $con->query($sql4);

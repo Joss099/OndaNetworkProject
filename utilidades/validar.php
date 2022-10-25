@@ -1,4 +1,6 @@
-<!-- Archivo encargado de validar los datos del inicio de sesion -->
+<!------------------------------------------------------------- -->
+<!----------------VALIDACION DE CREDENCIALES--------------------->
+<!------------------------------------------------------------- -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -36,7 +38,11 @@ if(!isset($array)){
             window.location = "../login.php";
           })
         </script>'; 
-}else{
+}
+/*------------------------------------------------------------- -->
+<!----------------VALIDACION DE ROL DE USUARIO-------------------->
+<!---------------------------------------------------------------*/
+else{
     //ADMINISTRADOR
 if($array['rol']==1){
     session_start();
@@ -69,7 +75,6 @@ if($array['rol']==2){
         </script>'; 
 }
 }
-
 ?>
     
 
