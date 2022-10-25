@@ -41,7 +41,7 @@ if (!isset($query)) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Ordenes</title>
+    <title>Onda Network</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -111,13 +111,13 @@ if (!isset($query)) {
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Reportes</span>
+                    <span>Ordenes</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ingresar Reporte</a>
-                        <a class="collapse-item" href="#">Ver Reportes</a>
+                        <a class="collapse-item" href="agregar_orden.php">Ingresar Orden</a>
+                        <a class="collapse-item" href="dashboard.php">Ver Reportes</a>
                     </div>
                 </div>
             </li>

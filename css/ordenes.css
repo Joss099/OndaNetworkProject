@@ -83,7 +83,7 @@
 }
 
 .boton-enviar{
-    padding-top: 4rem;
+    padding-top: 1rem;
     padding-left: 50rem !important;
 }
 
@@ -92,6 +92,24 @@
     height: 3rem !important;
 }
 
+.container-impuesto{
+    display: flex;
+    justify-content: space-around;
+    margin-left: 6rem !important;
+}
+
+.container-impuesto .form-group{
+    margin-left: 2rem;
+}
+
+.checkbox{
+    width: 1.3rem !important;
+    height: 1.3rem !important;
+}
+
+.subtotal{
+    width: 5.6rem !important;
+}
 
 
 

@@ -36,4 +36,27 @@ $cantidad = $_REQUEST['cantidad'];
 $total = $_REQUEST['total'];
 
 
+if(isset($no_orden) || isset($proveedor) || isset($pago) || isset($precio) || isset($responsable) || isset($reglon) || isset($fecha) || isset($fecha_pago) || isset($presupuesto) || isset($descripcion) || isset($observaciones) || isset($descripcion_orden) || isset($cantidad) || isset($total)){
+    echo "Debes llenar todos los datos";
+}
+else{
+
+ echo "$no_orden <br>";
+ echo "$proveedor <br>";
+ echo "$pago <br>";
+ echo "$precio <br>";
+ echo "$responsable <br>";
+ echo "$reglon <br>";
+ echo "$fecha <br>";
+ echo "$fecha_pago <br>";
+ echo "$presupuesto <br>";
+ echo "$descripcion <br>";
+ echo "$observaciones <br>";
+ echo "$descripcion_orden <br>";
+ echo "$cantidad <br>";
+ echo "$total <br>";
+
+}
+
+
 ?>

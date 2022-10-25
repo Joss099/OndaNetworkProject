@@ -343,7 +343,7 @@ include("utilidades/conexion.php");
                                         <td style='font-size: 13px' class='text-center'><input name="descripcion_orden" class="form-control" type="text"></td>
                                         <td style='font-size: 15px;' class='text-center'><input name="cantidad" class="form-control text-center cantidad" type="text"></td>
                                         <td style='font-size: 15px' class='text-center'><input name="precio_orden" class="form-control text-center precio" type="text"></td>
-                                        <td style='font-size: 15px' class='text-center'><input name="" class="form-control text-center" type="checkbox"></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="" class="form-control text-center checkbox" type="checkbox"></td>
                                         <td style='font-size: 15px' class='text-center'><input name="total" class="form-control text-center total" type="text"></td>
                                     </tr>
                             </table>
@@ -354,11 +354,29 @@ include("utilidades/conexion.php");
                                         <label for="exampleInput">Descripcion</label>
                                         <input type="text" class="form-control descripcion2" name="descripcion" id="descripcion" autocomplete="off">
                                     </div>
-                                </div>
-                                <div class="container-der">
+                                    <div class="container-der">
                                     <div class="form-group">
                                         <label for="exampleInput">Observaciones</label>
-                                        <input type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off">
+                                        <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="container-impuesto">
+                                    <div class="form-group">
+                                        <label for="exampleInput">Impuesto</label>
+                                        <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="checkbox-impuesto" id="checkbox-impuesto" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Subtotal</label>
+                                        <input type="text" class="form-control text-center subtotal" name="subtotal" id="subtotal2" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Impuestos</label>
+                                        <input type="text" class="form-control text-center subtotal" name="impuesto" id="impuesto2" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Total Orden</label>
+                                        <input type="text" class="form-control text-center subtotal" name="totalorden" id="totalorden" autocomplete="off" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -369,8 +387,6 @@ include("utilidades/conexion.php");
                             </form>
 
                         </div>
-
-                        <!-- Datos de la orden -->
 
                     </div>
 
@@ -414,6 +430,23 @@ include("utilidades/conexion.php");
                 </div>
             </div>
         </div>
+        
+        <!-- Funcion para activar input de impuestos -->
+        <script>
+            function activar(){
+                var checkbox = document.getElementById('checkbox-impuesto');
+                if(checkbox.checked){
+                    document.getElementById('subtotal2').disabled = false;
+                    document.getElementById('impuesto2').disabled = false;
+                    document.getElementById('totalorden').disabled = false;
+                }
+                else{
+                    document.getElementById('subtotal2').disabled = true;
+                    document.getElementById('impuesto2').disabled = true;
+                    document.getElementById('totalorden').disabled = true;
+                }
+            }
+        </script>
 
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>

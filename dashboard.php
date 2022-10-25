@@ -24,7 +24,7 @@ $query = mysqli_query($con, $sql);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Ordenes</title>
+    <title>Onda Network</title>
 
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -82,7 +82,7 @@ $query = mysqli_query($con, $sql);
                         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="#">Ingresar Orden</a>
+                                <a class="collapse-item" href="agregar_orden.php">Ingresar Orden</a>
                                 <a class="collapse-item" href="ordenes.php">Ver Ordenes Detalles</a>
                             </div>
                         </div>
