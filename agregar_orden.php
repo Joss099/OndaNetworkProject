@@ -247,10 +247,10 @@ include("utilidades/conexion.php");
                     <div class="card shadow mb-4">
                         <div class="container-1">
                             <div class="cont-izquierdo">
-                                <form action="">
+                                <form action="utilidades/agregar-orden.php" method="POST">
                                     <div class="form-group">
                                         <label for="exampleInput">No. Orden</label>
-                                        <input type="number" class="form-control no_orden" name="" id="" autocomplete="off">
+                                        <input type="number" class="form-control no_orden" name="no_orden" id="" autocomplete="off">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Proveedor</label>
@@ -266,7 +266,7 @@ include("utilidades/conexion.php");
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Forma de Pago</label>
-                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
+                                        <select class="form-control proveedor" id="pago" name="pago">
                                             <?php
                                             $sql3 = "SELECT * FROM tipo_pago";
                                             $query3 = mysqli_query($con, $sql3);
@@ -289,7 +289,7 @@ include("utilidades/conexion.php");
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Reglon Presupuestario</label>
-                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
+                                        <select class="form-control proveedor" id="reglon" name="reglon">
                                             <?php
                                             $sql5 = "SELECT * FROM reglon_presupuestario";
                                             $query5 = mysqli_query($con, $sql5);
@@ -304,17 +304,17 @@ include("utilidades/conexion.php");
                             <div class="cont-derecho">
                                 <div class="form-group">
                                     <label for="exampleInput">Fecha</label>
-                                    <input type="date" class="form-control fecha" name="usuario" id="usuario" autocomplete="off">
+                                    <input type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInput">Fecha de Pago</label>
-                                    <input type="date" class="form-control fecha_pago" name="usuario" id="usuario" autocomplete="off">
+                                    <input type="date" class="form-control fecha_pago" name="fecha_pago" id="fecha_pago" autocomplete="off">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInput">Presupuesto</label>
-                                    <select class="form-control presupuesto" id="proveedor" name="proveedor">
+                                    <select class="form-control presupuesto" id="presupuesto" name="presupuesto">
                                         <?php
                                         $sql6 = "SELECT * FROM `tipo de presupuesto`";
                                         $query6 = mysqli_query($con, $sql6);
@@ -339,12 +339,12 @@ include("utilidades/conexion.php");
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center numero" type="text"></td>
-                                        <td style='font-size: 13px' class='text-center'><input class="form-control" type="text"></td>
-                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center cantidad" type="text"></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center precio" type="text"></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center" type="checkbox"></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center total" type="text"></td>
+                                        <td style='font-size: 15px;' class='text-center'><input name="" class="form-control text-center numero" type="text"></td>
+                                        <td style='font-size: 13px' class='text-center'><input name="descripcion_orden" class="form-control" type="text"></td>
+                                        <td style='font-size: 15px;' class='text-center'><input name="cantidad" class="form-control text-center cantidad" type="text"></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="precio_orden" class="form-control text-center precio" type="text"></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="" class="form-control text-center" type="checkbox"></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="total" class="form-control text-center total" type="text"></td>
                                     </tr>
                             </table>
 
@@ -352,13 +352,13 @@ include("utilidades/conexion.php");
                                 <div class="container-izq">
                                     <div class="form-group">
                                         <label for="exampleInput">Descripcion</label>
-                                        <input type="text" class="form-control descripcion2" name="usuario" id="usuario" autocomplete="off">
+                                        <input type="text" class="form-control descripcion2" name="descripcion" id="descripcion" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="container-der">
                                     <div class="form-group">
                                         <label for="exampleInput">Observaciones</label>
-                                        <input type="text" class="form-control observaciones" name="usuario" id="usuario" autocomplete="off">
+                                        <input type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
