@@ -8,7 +8,6 @@
 
 .form-group label{
     font-size: 0.85rem;
-    color: rgb(88, 57, 180) !important;
 }
 
 /* Contenedor izquierdo */
@@ -18,11 +17,15 @@
 }
 
 .form-group .no_orden{
-    width: 4rem;
+    width: 5rem;
 }
 
 .form-group .proveedor {
     width: 24rem;
+}
+
+.proveedor{
+    width: 24rem !important;
 }
 
 .form-group .forma_pago{
@@ -39,11 +42,11 @@
 }
 
 .form-group .fecha{
-    width: 8rem;
+    width: 10rem;
 }
 
 .form-group .fecha_pago{
-    width: 8rem;
+    width: 10rem;
 }
 
 .form-group .presupuesto{
@@ -77,6 +80,16 @@
 
 .descripcion2{
     width: 25rem !important;
+}
+
+.boton-enviar{
+    padding-top: 4rem;
+    padding-left: 50rem !important;
+}
+
+.boton-enviar input[type="submit"]{
+    width: 15rem !important;
+    height: 3rem !important;
 }
 
 
