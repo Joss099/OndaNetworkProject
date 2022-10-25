@@ -12,8 +12,20 @@ if (empty(base64_decode($_REQUEST['id_orden']))) {
     header("location: ../login.php");
 }
 $id_orden = base64_decode($_REQUEST['id_orden']);
-$sql = "SELECT orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, fecha_pag,Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE orden.Ord_Num = $id_orden";
+$sql = "SELECT orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Num_Item = $id_orden order by orden.Ord_Num";
 $query = mysqli_query($con, $sql);
+
+if (!isset($query)) {
+    echo '<script>
+        Swal.fire({
+            icon: "error",
+            title: "ups...",
+            text: "No hemos encontrado la orden",
+          }).then(function(){
+            window.location = "dashboard.php";
+          })
+        </script>';
+}
 
 ?>
 <!-- Recorrer todos los regiistros -->
@@ -256,29 +268,29 @@ $query = mysqli_query($con, $sql);
                         <div class="container-1">
                             <div class="cont-izquierdo">
                                 <form action="">
-                                    <?php 
-                                    while($row = mysqli_fetch_array($query)){
+                                    <?php
+                                    while ($row = mysqli_fetch_array($query)) {
                                     ?>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">No. Orden</label>
-                                        <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="" id="" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Proveedor</label>
-                                        <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="" id="" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Forma de Pago</label>
-                                        <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="" id="" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Responsable</label>
-                                        <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="usuario" id="usuario" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Reglon Presupuestario</label>
-                                        <input value="<?php echo $row['Descripcion del Reglon'] ?>"type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">No. Orden</label>
+                                            <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="" id="" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Proveedor</label>
+                                            <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="" id="" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Forma de Pago</label>
+                                            <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="" id="" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Responsable</label>
+                                            <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="usuario" id="usuario" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Reglon Presupuestario</label>
+                                            <input value="<?php echo $row['Descripcion del Reglon'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                        </div>
                             </div>
 
                             <div class="cont-derecho">
@@ -289,16 +301,16 @@ $query = mysqli_query($con, $sql);
 
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Fecha de Pago</label>
-                                    <input value="<?php echo $row['fecha_pag'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    <input value="<?php echo $row['fecha_pag'] ?>" type="text" class="form-control fecha_pago" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Presupuesto</label>
-                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
-                                <?php
-                                }
-                                ?>
+                                    <?php
+                                    }
+                            ?>
                                 </form>
                             </div>
                         </div>

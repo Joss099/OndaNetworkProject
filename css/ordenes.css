@@ -37,7 +37,15 @@
 }
 
 .form-group .fecha{
-    width: 10rem;
+    width: 8rem;
+}
+
+.form-group .fecha_pago{
+    width: 8rem;
+}
+
+.form-group .presupuesto{
+    width: 13rem;
 }
 
 
