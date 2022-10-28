@@ -6,6 +6,10 @@ session_start();
 //Sesion del usuario administrador
 $usuario = $_SESSION['username'];
 
+if (!isset($usuario)) {
+    header('Location: login.php');
+}
+
 include("utilidades/conexion.php");
 ?>
 <!-- Recorrer todos los regiistros -->
@@ -91,13 +95,13 @@ include("utilidades/conexion.php");
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Reportes</span>
+                    <span>Ordenes</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ingresar Reporte</a>
-                        <a class="collapse-item" href="#">Ver Reportes</a>
+                        <a class="collapse-item" href="dashboard.php">Ver Ordenes</a>
+                        <a class="collapse-item" href="ordenes.php">Ver Ordenes Detalles</a>
                     </div>
                 </div>
             </li>
@@ -209,18 +213,16 @@ include("utilidades/conexion.php");
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Perfil
                                     </a>
-                                <?php
-                            }
-                                ?>
-                                <!-- <a class="dropdown-item" href="#">
+
+                                    <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a> -->
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Cerrar Sesion
-                                </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Cerrar Sesion
+                                    </a>
                                 </div>
                         </li>
 
@@ -247,69 +249,68 @@ include("utilidades/conexion.php");
                     <div class="card shadow mb-4">
                         <div class="container-1">
                             <div class="cont-izquierdo">
-                                <form action="utilidades/agregar-orden.php" method="POST">
-                                    <div class="form-group">
-                                        <label for="exampleInput">No. Orden</label>
-                                        <input type="number" class="form-control no_orden" name="no_orden" id="" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInput">Proveedor</label>
-                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
-                                            <?php
-                                            $sql2 = "SELECT * FROM proveedores";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row2 = mysqli_fetch_array($query2)) {
-                                                echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInput">Forma de Pago</label>
-                                        <select class="form-control proveedor" id="pago" name="pago">
-                                            <?php
-                                            $sql3 = "SELECT * FROM tipo_pago";
-                                            $query3 = mysqli_query($con, $sql3);
-                                            while ($row3 = mysqli_fetch_array($query3)) {
-                                                echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInput">Responsable</label>
+                                <!-- Formulario para ingreso de orden -->
+                                <form action="utilidades/agregar-orden.php?id_usuario=<?php echo base64_encode($row['id']) ?>" method="POST">
+                                <?php
+                            }
+                                ?>
+                                <div class="form-group">
+                                    <label for="exampleInput">No. Orden</label>
+                                    <input type="number" min="1" class="form-control no_orden" name="no_orden" id="" autocomplete="off" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInput">Proveedor</label>
+                                    <select class="form-control proveedor" id="proveedor" name="proveedor" required>
                                         <?php
-                                        $sql4 = "SELECT * from usuarios where Usuario = '$usuario'";
-                                        $query4 = mysqli_query($con, $sql4);
-                                        while ($row4 = mysqli_fetch_array($query4)) {
+                                        $sql2 = "SELECT * FROM proveedores";
+                                        $query2 = mysqli_query($con, $sql2);
+                                        while ($row2 = mysqli_fetch_array($query2)) {
+                                            echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                        }
                                         ?>
-                                            <input type="text" class="form-control responsable" value="<?php echo $row4['Nom_User'] ?>" name="usuario" id="usuario" autocomplete="off">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInput">Forma de Pago</label>
+                                    <select class="form-control proveedor" id="pago" name="pago" required>
+                                        <?php
+                                        $sql3 = "SELECT * FROM tipo_pago";
+                                        $query3 = mysqli_query($con, $sql3);
+                                        while ($row3 = mysqli_fetch_array($query3)) {
+                                            echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInput">Responsable</label>
+                                    <?php
+                                    $sql4 = "SELECT * from usuarios where Usuario = '$usuario'";
+                                    $query4 = mysqli_query($con, $sql4);
+                                    while ($row4 = mysqli_fetch_array($query4)) {
+                                    ?>
+                                        <input type="text" class="form-control responsable" value="<?php echo $row4['Nom_User'] ?>" name="usuario" id="usuario" autocomplete="off" disabled>
 
-                                        <?php } ?>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInput">Reglon Presupuestario</label>
-                                        <select class="form-control proveedor" id="reglon" name="reglon">
-                                            <?php
-                                            $sql5 = "SELECT * FROM reglon_presupuestario";
-                                            $query5 = mysqli_query($con, $sql5);
-                                            while ($row5 = mysqli_fetch_array($query5)) {
-                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                    <?php } ?>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInput">Reglon Presupuestario</label>
+                                    <select class="form-control proveedor" id="reglon" name="reglon" required>
+                                        <?php
+                                        $sql5 = "SELECT * FROM reglon_presupuestario";
+                                        $query5 = mysqli_query($con, $sql5);
+                                        while ($row5 = mysqli_fetch_array($query5)) {
+                                            echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="cont-derecho">
                                 <div class="form-group">
                                     <label for="exampleInput">Fecha</label>
-                                    <input type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInput">Fecha de Pago</label>
-                                    <input type="date" class="form-control fecha_pago" name="fecha_pago" id="fecha_pago" autocomplete="off">
+                                    <input type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off" required>
                                 </div>
 
                                 <div class="form-group">
@@ -339,12 +340,12 @@ include("utilidades/conexion.php");
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style='font-size: 15px;' class='text-center'><input name="" class="form-control text-center numero" type="text"></td>
-                                        <td style='font-size: 13px' class='text-center'><input name="descripcion_orden" class="form-control" type="text"></td>
-                                        <td style='font-size: 15px;' class='text-center'><input name="cantidad" class="form-control text-center cantidad" type="text"></td>
-                                        <td style='font-size: 15px' class='text-center'><input name="precio_orden" class="form-control text-center precio" type="text"></td>
+                                        <td style='font-size: 15px;' class='text-center'><input name="no_ordendetalle" min="1" class="form-control text-center numero" type="number" required></td>
+                                        <td style='font-size: 13px' class='text-center'><input name="descripcion_detalle" class="form-control" type="text" required></td>
+                                        <td style='font-size: 15px;' class='text-center'><input name="cantidad" class="form-control text-center cantidad" type="number" required></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="precio_orden" class="form-control text-center precio" type="number" required></td>
                                         <td style='font-size: 15px' class='text-center'><input name="" class="form-control text-center checkbox" type="checkbox"></td>
-                                        <td style='font-size: 15px' class='text-center'><input name="total" class="form-control text-center total" type="text"></td>
+                                        <td style='font-size: 15px' class='text-center'><input name="total" class="form-control text-center total" type="number" required></td>
                                     </tr>
                             </table>
 
@@ -352,14 +353,14 @@ include("utilidades/conexion.php");
                                 <div class="container-izq">
                                     <div class="form-group">
                                         <label for="exampleInput">Descripcion</label>
-                                        <input type="text" class="form-control descripcion2" name="descripcion" id="descripcion" autocomplete="off">
+                                        <input type="text" class="form-control descripcion2" name="descripcion" id="descripcion" autocomplete="off" required>
                                     </div>
                                     <div class="container-der">
-                                    <div class="form-group">
-                                        <label for="exampleInput">Observaciones</label>
-                                        <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="3"></textarea>
+                                        <div class="form-group">
+                                            <label for="exampleInput">Observaciones</label>
+                                            <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="3" required></textarea>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                                 <div class="container-impuesto">
                                     <div class="form-group">
@@ -368,20 +369,20 @@ include("utilidades/conexion.php");
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Subtotal</label>
-                                        <input type="text" class="form-control text-center subtotal" name="subtotal" id="subtotal2" autocomplete="off" disabled>
+                                        <input type="number" class="form-control text-center subtotal" name="subtotal" id="subtotal2" autocomplete="off" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Impuestos</label>
-                                        <input type="text" class="form-control text-center subtotal" name="impuesto" id="impuesto2" autocomplete="off" disabled>
+                                        <input type="number" class="form-control text-center subtotal" name="impuesto" id="impuesto2" autocomplete="off" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInput">Total Orden</label>
-                                        <input type="text" class="form-control text-center subtotal" name="totalorden" id="totalorden" autocomplete="off" disabled>
+                                        <input type="number" class="form-control text-center subtotal" name="totalorden" id="totalorden" autocomplete="off" disabled>
                                     </div>
                                 </div>
                             </div>
                             <div class="boton-enviar">
-                            <input type="submit" value="Guardar" class="btn btn-primary">
+                                <input type="submit" value="Guardar" class="btn btn-primary">
                             </div>
                             <br><br>
                             </form>
@@ -430,17 +431,16 @@ include("utilidades/conexion.php");
                 </div>
             </div>
         </div>
-        
+
         <!-- Funcion para activar input de impuestos -->
         <script>
-            function activar(){
+            function activar() {
                 var checkbox = document.getElementById('checkbox-impuesto');
-                if(checkbox.checked){
+                if (checkbox.checked) {
                     document.getElementById('subtotal2').disabled = false;
                     document.getElementById('impuesto2').disabled = false;
                     document.getElementById('totalorden').disabled = false;
-                }
-                else{
+                } else {
                     document.getElementById('subtotal2').disabled = true;
                     document.getElementById('impuesto2').disabled = true;
                     document.getElementById('totalorden').disabled = true;

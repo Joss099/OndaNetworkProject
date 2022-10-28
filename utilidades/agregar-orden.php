@@ -19,44 +19,58 @@
 <?php
 
 include("conexion.php");
-
-$no_orden = $_REQUEST['no_orden'];
+//Datos para la tabla ondaorde.orden
+//id de la orden es autoincrementable
+$fecha = $_REQUEST['fecha'];
 $proveedor = $_REQUEST['proveedor'];
 $pago = $_REQUEST['pago'];
-$precio = $_REQUEST['precio_orden'];
-$responsable = $_REQUEST['usuario'];
-$reglon = $_REQUEST['reglon'];
-$fecha = $_REQUEST['fecha'];
-$fecha_pago = $_REQUEST['fecha_pago'];
+$responsable = base64_decode($_REQUEST['id_usuario']);
 $presupuesto = $_REQUEST['presupuesto'];
-$descripcion = $_REQUEST['descripcion'];
 $observaciones = $_REQUEST['observaciones'];
-$descripcion_orden = $_REQUEST['descripcion_orden'];
+$reglon = $_REQUEST['reglon'];
+$descripcion = $_REQUEST['descripcion'];
+
+//Datos para la tabla ondaorden.orden_detalle
+//id orden_detalle es autoincrementable
+$no_orden = $_REQUEST['no_orden'];
+$no_detalle = $_REQUEST['no_ordendetalle'];
+$precio = $_REQUEST['precio_orden'];
+$descripcion_orden = $_REQUEST['descripcion_detalle'];
 $cantidad = $_REQUEST['cantidad'];
 $total = $_REQUEST['total'];
 
+$sql = "SELECT Ord_Num from orden;";
+$query=mysqli_query($con,$sql);
+while($row = mysqli_fetch_array($query)){
+  $result = $row;
+}
 
-if(isset($no_orden) || isset($proveedor) || isset($pago) || isset($precio) || isset($responsable) || isset($reglon) || isset($fecha) || isset($fecha_pago) || isset($presupuesto) || isset($descripcion) || isset($observaciones) || isset($descripcion_orden) || isset($cantidad) || isset($total)){
-    echo "Debes llenar todos los datos";
+if($result['Ord_Num'] == $no_orden ){
+  echo '<script>
+  Swal.fire({
+      icon: "info",
+      title: "Espera...",
+      text: "El numero de orden no esta registrado",
+    }).then(function(){
+      window.location = "../agregar_orden.php";
+    })
+  </script>';
 }
 else{
+  $sql1 = "INSERT INTO orden (Fecha, Id_Prov, Id_Tip_pag, Id_User, Id_Pres, Observaciones, Id_Reglon, Desc_Orden) values('$fecha', $proveedor, $pago, $responsable, $presupuesto,'$observaciones',$reglon, '$descripcion')";
+  $query1=mysqli_query($con,$sql1);
+  $sql2 = "INSERT INTO orden_detalle (Desc_Item, Cnt_Item, Pre_Item, Tot_Item, Ord_Num) values ('$descripcion_orden', $cantidad, $precio,$total , $no_orden)";
+  $query2=mysqli_query($con,$sql2);
 
- echo "$no_orden <br>";
- echo "$proveedor <br>";
- echo "$pago <br>";
- echo "$precio <br>";
- echo "$responsable <br>";
- echo "$reglon <br>";
- echo "$fecha <br>";
- echo "$fecha_pago <br>";
- echo "$presupuesto <br>";
- echo "$descripcion <br>";
- echo "$observaciones <br>";
- echo "$descripcion_orden <br>";
- echo "$cantidad <br>";
- echo "$total <br>";
-
+  echo '<script>
+        Swal.fire({
+            icon: "success",
+            title: "Guardado Correctamente",
+            text: "La orden ha sido registrado.",
+          }).then(function(){
+            window.location = "../agregar_orden.php";
+          })
+        </script>'; 
 }
-
 
 ?>

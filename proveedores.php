@@ -86,7 +86,7 @@ $query = mysqli_query($con, $sql);
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="registrar_usuario" data-toggle="modal" data-target="#exampleModalCenter">Registrar Usuarios</a>
+                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
                     </div>
                 </div>
             </li>
@@ -115,7 +115,7 @@ $query = mysqli_query($con, $sql);
                 <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                        <a class="collapse-item" href="" data-toggle="modal" data-target="#exampleModalCenter">Ingresar Proveedor</a>
                     </div>
                 </div>
             </li>
@@ -185,7 +185,7 @@ $query = mysqli_query($con, $sql);
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" id="buscar-usuario" class="form-control bg-light border-0 small" placeholder="Buscar usuario..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" id="buscar-proveedor" class="form-control bg-light border-0 small" placeholder="Buscar proveedores..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-primary-2" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -259,7 +259,7 @@ $query = mysqli_query($con, $sql);
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Usuarios</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Proveedores</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -272,10 +272,10 @@ $query = mysqli_query($con, $sql);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Usuarios Totales</div>
+                                                Proveedores Totales</div>
                                             <!-- Consulta para el numero total de usuarios registrados -->
                                             <?php
-                                            $sql2 = "SELECT COUNT(*) AS CUENTA FROM usuarios ";
+                                            $sql2 = "SELECT count(*) as CUENTA from proveedores;";
                                             $query2 = mysqli_query($con, $sql2);
                                             while ($row2 = mysqli_fetch_array($query2)) {
                                             ?>
@@ -301,7 +301,7 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
-                        <div id="usuarios">
+                        <div id="proveedores">
                         </div>
                     </div>
                 </div>
@@ -349,51 +349,37 @@ $query = mysqli_query($con, $sql);
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/usuario.js"></script>
+    <script src="js/proveedor.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-
-    <!-- Modal para Registrar Usuario -->
-    <form action="utilidades/registro-usuario.php" method="POST">
+    <!-- Modal para Registrar Proveedor -->
+    <form action="utilidades/registro-proveedor.php" method="POST">
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Registrar Usuario</h3>
+                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Registrar Proveedor</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <!-- Body del modal -->
-                        <label for="" style="color:rgb(26,54,78)">Nombre Completo</label>
+                        <label for="" style="color:rgb(26,54,78)">Nombre del Proveedor</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="nombre_usuario" aria-describedby="basic-addon1" autocomplete="off">
+                            <input type="text" class="form-control" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
                         </div>
 
-                        <label for="" style="color:rgb(26,54,78)">Nombre de Usuario</label>
+                        <label for="" style="color:rgb(26,54,78)">Contacto</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="usuario" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" class="form-control" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
                         </div>
-                        <label for="" style="color:rgb(26,54,78)">Contraseña</label>
+                        <label for="" style="color:rgb(26,54,78)">Telefono</label>
                         <div class="input-group mb-3">
-                            <input type="password" class="form-control" placeholder="••••••••••••" name="pass" aria-describedby="basic-addon3">
-                        </div>
-
-                        <div>
-                            <label for="" style="color:rgb(26,54,78)">Rol</label>
-                            <select class="custom-select custom-select-sm" name="rol-usuario" style="height: 40px">
-                                <?php
-                                $sql2 = "SELECT * from roles";
-                                $query1 = mysqli_query($con, $sql2);
-                                while ($row2 = mysqli_fetch_array($query1)) {
-                                    echo '<option value="' . $row2['id_roles'] . '">' . $row2['nom_rol'] . '</option>';
-                                }
-                                ?>
-                            </select>
+                            <input type="number" class="form-control" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
                         </div>
                         <!-- Fin del body del modal -->
                     </div>
@@ -407,60 +393,46 @@ $query = mysqli_query($con, $sql);
         </div>
     </form>
 
-    <!-- Modal para editar usuarios -->
-    <?php
-    if (isset(($_REQUEST['id']))) {
-        $id = base64_decode($_REQUEST['id']);
-        $sql = "SELECT id, Nom_User, Usuario, Pass, nom_rol from usuarios inner join roles on roles.id_roles = usuarios.rol where id = $id";
-        $query = mysqli_query($con, $sql);
-    }
-    ?>
+                <?php
+                    if(isset(($_REQUEST['id']))){
+                    $id = base64_decode($_REQUEST['id']);
+                    $sql = "SELECT * from proveedores where id_Prov = '$id'";
+                    $query = mysqli_query($con, $sql);
+                    }
+                ?>
 
-    <!-- Modal para Registrar Usuario -->
-    <form action="utilidades/editar-usuarios.php?id_usuario=<?php echo base64_encode($id) ?>" method="POST">
+    <form action="utilidades/editar-proveedor.php?id_proveedor=<?php echo base64_encode($id) ?>" method="POST">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Editar Usuario</h3>
+                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Actualizar Proveedor</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <!-- Body del modal -->
-                        <?php
+                        
+                        <?php 
                         while ($row = mysqli_fetch_array($query)) {
                         ?>
-                            <label for="" style="color:rgb(26,54,78)">Nombre Completo</label>
+                            <label for="" style="color:rgb(26,54,78)">Nombre del Proveedor</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Nom_User'] ?>" name="nombre_usuario" aria-describedby="basic-addon1" autocomplete="off">
+                                <input type="text" class="form-control" value="<?php echo $row['Nom_Prov']?>" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
                             </div>
 
-                            <label for="" style="color:rgb(26,54,78)">Nombre de Usuario</label>
+                            <label for="" style="color:rgb(26,54,78)">Contacto</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Usuario'] ?>" name="usuario" aria-describedby="basic-addon2" autocomplete="off">
+                                <input type="text" class="form-control" value="<?php echo $row['Cont_Prov']?>" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
                             </div>
-                            <label for="" style="color:rgb(26,54,78)">Contraseña</label>
+                            <label for="" style="color:rgb(26,54,78)">Telefono</label>
                             <div class="input-group mb-3">
-                                <input type="password" class="form-control" value="<?php echo $row['Pass'] ?>" placeholder="••••••••••••" name="contra" aria-describedby="basic-addon3">
+                                <input type="text" class="form-control" value="<?php echo $row['Tel_Prov']?>" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
                             </div>
 
-
-                            <div>
-                                <label for="exampleInputPassword1" id="rol-lb">Rol actual: <?php echo '<h6 style="color:#4e73df">' . $row['nom_rol'] . '</h6>'; ?></label>
-                            <?php } ?>
-                            <select class="custom-select custom-select-sm" name="rol-usuario" style="height: 40px">
-                                <?php
-                                $sql2 = "SELECT * from roles";
-                                $query1 = mysqli_query($con, $sql2);
-                                while ($row2 = mysqli_fetch_array($query1)) {
-                                    echo '<option value="' . $row2['id_roles'] . '">' . $row2['nom_rol'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                            </div>
-                            <!-- Fin del body del modal -->
+                        <?php } ?>
+                        <!-- Fin del body del modal -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -483,7 +455,7 @@ $query = mysqli_query($con, $sql);
 
     ?>
 
-    <!-- Modal Eliminar Usuario -->
+        <!-- Modal Eliminar Usuario -->
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -499,8 +471,8 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <?php $id = base64_decode($_REQUEST['id_usuario']); ?>
-                        <a  href="utilidades/eliminar-usuario.php?id_usuario=<?php echo base64_encode($id)?>" class="btn btn-danger">Eliminar</a>
+                        <?php $id = base64_decode($_REQUEST['id_proveedor']); ?>
+                        <a  href="utilidades/eliminar-proveedor.php?id_proveedor=<?php echo base64_encode($id)?>" class="btn btn-danger">Eliminar</a>
                     </div>
                 </div>
             </div>
@@ -508,15 +480,14 @@ $query = mysqli_query($con, $sql);
 
     <?php
 
-if (isset(($_REQUEST['id_usuario']))) {
-    $id = $_REQUEST['id_usuario'];
+if (isset(($_REQUEST['id_proveedor']))) {
+    $id = $_REQUEST['id_proveedor'];
     if (!empty($id)) {
         echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
     }
 }
 
 ?>
-
 </body>
 
 </html>

@@ -5,12 +5,13 @@ error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 session_start();
 //Sesion del usuario administrador
 $usuario = $_SESSION['username'];
-
+$usuario2 = $_SESSION['username-2'];
 include("utilidades/conexion.php");
 
 if (empty(base64_decode($_REQUEST['id_orden']))) {
     header("location: ../login.php");
 }
+
 $id_orden = base64_decode($_REQUEST['id_orden']);
 $sql = "SELECT Num_Item, Pre_Item, Tot_Item, orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Num_Item = $id_orden order by orden.Ord_Num";
 $query = mysqli_query($con, $sql);
@@ -214,8 +215,14 @@ if (!isset($query)) {
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <?php
-                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
-                            $query2 = mysqli_query($con, $sql2);
+                            if ($_SESSION['username']) {
+                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
+                                $query2 = mysqli_query($con, $sql2);
+                            } elseif ($_SESSION['username-2']) {
+                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
+                                $query2 = mysqli_query($con, $sql2);
+                            }
+
                             while ($row4 = mysqli_fetch_array($query2)) {
                             ?>
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -232,10 +239,7 @@ if (!isset($query)) {
                                 <?php
                             }
                                 ?>
-                                <!-- <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a> -->
+
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -267,46 +271,83 @@ if (!isset($query)) {
                     <div class="card shadow mb-4">
                         <div class="container-1">
                             <div class="cont-izquierdo">
-                                <form action="">
+                                <form action="#">
                                     <?php
                                     while ($row = mysqli_fetch_array($query)) {
                                     ?>
                                         <div class="form-group">
                                             <label for="exampleInput">No. Orden</label>
-                                            <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="" id="" autocomplete="off" disabled>
+                                            <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="no_orden" id="no_orden" autocomplete="off" disabled>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="proveedor-sneditar">
                                             <label for="exampleInput">Proveedor</label>
-                                            <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="" id="" autocomplete="off" disabled>
+                                            <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="proveedor" id="proveedor" autocomplete="off" disabled>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="proveedor-editar" style="display: none;">
+                                        <label for="exampleInput">Proveedor</label>
+                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
+                                            <?php
+                                            $sql2 = "SELECT * FROM proveedores";
+                                            $query2 = mysqli_query($con, $sql2);
+                                            while ($row2 = mysqli_fetch_array($query2)) {
+                                                echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                        <div class="form-group" id="formapago-sneditar">
                                             <label for="exampleInput">Forma de Pago</label>
-                                            <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="" id="" autocomplete="off" disabled>
+                                            <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="form_pago" id="form_pago" autocomplete="off" disabled>
                                         </div>
+                                        <div class="form-group" id="formapago-editar" style="display: none;">
+                                        <label for="exampleInput">Forma de Pago</label>
+                                        <select class="form-control proveedor" id="pago" name="pago">
+                                            <?php
+                                            $sql3 = "SELECT * FROM tipo_pago";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
+                                                echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                                         <div class="form-group">
                                             <label for="exampleInput">Responsable</label>
-                                            <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="usuario" id="usuario" autocomplete="off" disabled>
+                                            <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="reglon-sneditar">
                                             <label for="exampleInput">Reglon Presupuestario</label>
-                                            <input value="<?php echo $row['Descripcion del Reglon'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                            <input value="<?php echo $row['Descripcion del Reglon'] ?>" type="text" class="form-control" name="reglon" id="reglon" autocomplete="off" disabled>
                                         </div>
+
+                                        <div class="form-group" id="reglon-editar" style="display: none;">
+                                        <label for="exampleInput">Reglon Presupuestario</label>
+                                        <select class="form-control proveedor" id="reglon" name="reglon">
+                                            <?php
+                                            $sql5 = "SELECT * FROM reglon_presupuestario";
+                                            $query5 = mysqli_query($con, $sql5);
+                                            while ($row5 = mysqli_fetch_array($query5)) {
+                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                             </div>
 
                             <div class="cont-derecho">
-                                <div class="form-group">
+                                <div class="form-group" id="fecha-sneditar">
                                     <label for="exampleInput">Fecha</label>
-                                    <input value="<?php echo $row['Fecha'] ?>" type="text" class="form-control fecha" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    <input value="<?php echo $row['Fecha'] ?>" type="text" class="form-control fecha" name="fecha" id="fecha" autocomplete="off" disabled>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="exampleInput">Fecha de Pago</label>
-                                    <input value="<?php echo $row['fecha_pag'] ?>" type="text" class="form-control fecha_pago" name="usuario" id="usuario" autocomplete="off" disabled>
+                                <div class="form-group" id="fecha-editar" style="display: none;">
+                                    <label for="exampleInput">Fecha</label>
+                                    <input value="<?php echo $row['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInput">Presupuesto</label>
-                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
                                 </div>
                             </div>
                         </div><br>
@@ -323,12 +364,12 @@ if (!isset($query)) {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center numero" type="text" value="<?php echo $row['Num_Item'] ?>" disabled></td>
-                                        <td style='font-size: 13px' class='text-center'><input class="form-control" type="text" value="<?php echo $row['Desc_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px;' class='text-center'><input class="form-control text-center cantidad" type="text" value="<?php echo $row['Cnt_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center precio" type="text" value="<?php echo $row['Pre_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center" type="checkbox" checked disabled></td>
-                                        <td style='font-size: 15px' class='text-center'><input class="form-control text-center total" type="text" value="<?php echo $row['Tot_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px;' class='text-center'><input id="no_orden2" class="form-control text-center numero" type="text" value="<?php echo $row['Num_Item'] ?>" disabled></td>
+                                        <td style='font-size: 13px' class='text-center'><input id="descripcion" class="form-control" type="text" value="<?php echo $row['Desc_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px;' class='text-center'><input id="cantidad" class="form-control text-center cantidad" type="text" value="<?php echo $row['Cnt_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px' class='text-center'><input id="precio" class="form-control text-center precio" type="text" value="<?php echo $row['Pre_Item'] ?>" disabled></td>
+                                        <td style='font-size: 15px;' class='text-center'><input style="margin-left: 1.3rem" id="impuesto" class="form-control text-center checkbox" type="checkbox" checked disabled></td>
+                                        <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $row['Tot_Item'] ?>" disabled></td>
                                     </tr>
                             </table>
 
@@ -336,13 +377,20 @@ if (!isset($query)) {
                                 <div class="container-izq">
                                     <div class="form-group">
                                         <label for="exampleInput">Descripcion</label>
-                                        <input value="<?php echo $row['Desc_Item'] ?>" type="text" class="form-control descripcion2" name="usuario" id="usuario" autocomplete="off" disabled>
+                                        <input value="<?php echo $row['Desc_Orden'] ?>" type="text" class="form-control descripcion2" name="descripcion2" id="descripcion2" autocomplete="off" disabled>
                                     </div>
                                 </div>
-                                <div class="container-der">
+                                <div class="container-der" style="display: flex; justify-content:space-between;">
                                     <div class="form-group">
                                         <label for="exampleInput">Observaciones</label>
-                                        <input value="<?php echo $row['Observaciones'] ?>" type="text" class="form-control observaciones" name="usuario" id="usuario" autocomplete="off" disabled>
+                                        <input value="<?php echo $row['Observaciones'] ?>" type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <div style="display: flex;">
+                                        <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
+                                        <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
+                                        </div>
+                                        <input type="submit" value="Guardar" class="btn btn-primary" style="width: 10rem ;" id="guardar" disabled>
                                     </div>
                                 </div>
                                 <br><br>
@@ -410,21 +458,60 @@ if (!isset($query)) {
         <!-- Script para editar usuarios -->
 
         <script>
-            function habilitar() {
+            function activar() {
                 var check = document.getElementById('exampleCheck1');
                 if (check.checked) {
-                    document.getElementById('desc_orden').disabled = false;
-                    document.getElementById('cant_orden').disabled = false;
-                    document.getElementById('precio_orden').disabled = false;
+                    document.getElementById('no_orden').disabled = false;
+                    document.getElementById('proveedor').disabled = false;
+                    document.getElementById('form_pago').disabled = false;
+                    document.getElementById('responsable').disabled = false;
+                    document.getElementById('reglon').disabled = false;
+                    document.getElementById('fecha').disabled = false;
+                    document.getElementById('presupuesto').disabled = false;
+                    document.getElementById('no_orden2').disabled = false;
+                    document.getElementById('descripcion').disabled = false;
+                    document.getElementById('cantidad').disabled = false;
+                    document.getElementById('precio').disabled = false;
+                    document.getElementById('impuesto').disabled = false;
+                    document.getElementById('total').disabled = false;
+                    document.getElementById('descripcion2').disabled = false;
+                    document.getElementById('observaciones').disabled = false;
                     document.getElementById('guardar').disabled = false;
-                    document.getElementById('total_orden').disabled = false;
+                    document.getElementById('fecha-sneditar').style.display = "none";
+                    document.getElementById('fecha-editar').style.display = "block";
+                    document.getElementById('proveedor-sneditar').style.display = "none";
+                    document.getElementById('proveedor-editar').style.display = "block";
+                    document.getElementById('formapago-sneditar').style.display = "none";
+                    document.getElementById('formapago-editar').style.display = "block";
+                    document.getElementById('reglon-sneditar').style.display = "none";
+                    document.getElementById('reglon-editar').style.display = "block";
+                    
 
                 } else {
-                    document.getElementById('desc_orden').disabled = true;
-                    document.getElementById('cant_orden').disabled = true;
-                    document.getElementById('precio_orden').disabled = true;
+                    document.getElementById('no_orden').disabled = true;
+                    document.getElementById('proveedor').disabled = true;
+                    document.getElementById('form_pago').disabled = true;
+                    document.getElementById('responsable').disabled = true;
+                    document.getElementById('reglon').disabled = true;
+                    document.getElementById('fecha').disabled = true;
+                    document.getElementById('presupuesto').disabled = true;
+                    document.getElementById('no_orden2').disabled = true;
+                    document.getElementById('descripcion').disabled = true;
+                    document.getElementById('cantidad').disabled = true;
+                    document.getElementById('precio').disabled = true;
+                    document.getElementById('impuesto').disabled = true;
+                    document.getElementById('total').disabled = true;
+                    document.getElementById('descripcion2').disabled = true;
+                    document.getElementById('observaciones').disabled = true;
                     document.getElementById('guardar').disabled = true;
-                    document.getElementById('total_orden').disabled = true;
+                    document.getElementById('fecha-sneditar').style.display = "block";
+                    document.getElementById('fecha-editar').style.display = "none";
+                    document.getElementById('proveedor-sneditar').style.display = "block";
+                    document.getElementById('proveedor-editar').style.display = "none";
+                    document.getElementById('formapago-sneditar').style.display = "block";
+                    document.getElementById('formapago-editar').style.display = "none";
+                    document.getElementById('reglon-sneditar').style.display = "block";
+                    document.getElementById('reglon-editar').style.display = "none";
                 }
             }
         </script>

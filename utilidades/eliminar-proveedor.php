@@ -17,10 +17,10 @@
 
 include("conexion.php");
 
-$id = base64_decode($_GET['id_usuario']);
+$id = base64_decode($_GET['id_proveedor']);
 
 
-$sql = "DELETE FROM usuarios WHERE id = $id";
+$sql = "DELETE FROM proveedores WHERE id_Prov = $id";
 $query=mysqli_query($con,$sql);
 
 if($query){
@@ -28,9 +28,9 @@ if($query){
     Swal.fire({
         icon: "warning",
         title: "Eliminado",
-        text: "El usuario ha sido eliminado correctamente",
+        text: "El proveedor ha sido eliminado correctamente",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../proveedores.php";
       })
     </script>'; 
 } else{
@@ -41,7 +41,7 @@ if($query){
         title: "Ups",
         text: "No se ha podido eliminar el usuario",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../proveedores.php";
       })
     </script>'; 
 

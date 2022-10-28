@@ -29,8 +29,8 @@
                         <td class='text-center' style='width: 500px'>".$fila['Nom_User']."</td>
                         <td class='text-center'>".$fila['Usuario']."</td>
                         <td class='text-center'>".$fila['nom_rol']."</td>
-                        <td class='text-center'><a href='perfil-usuarios.php?id=".base64_encode($fila['id'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
-                        <a href='utilidades/eliminar-usuario.php?id_usuario=".$fila['id']."' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a></td>
+                        <td class='text-center'><a href='visualizar_usuarios.php?id=".base64_encode($fila['id'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
+                        <a href='visualizar_usuarios.php?id_usuario=".base64_encode($fila['id'])."' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a></td>
                         </tr>";
         }     
 

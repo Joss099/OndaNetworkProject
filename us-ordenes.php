@@ -1,17 +1,18 @@
 <?php
 
 session_start();
-$usuario = $_SESSION['username'];
+$usuario2 = $_SESSION['username-2'];
 //comprobacion de que exista una sesion activa
-if (!isset($usuario)) {
+if (!isset($usuario2)) {
     header("location:./login.php");
 }
 
 include("utilidades/conexion.php");
-$sql = "SELECT * from usuarios where Usuario = '$usuario'";
+$sql = "SELECT * from usuarios where Usuario = '$usuario2'";
 $query = mysqli_query($con, $sql);
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -26,32 +27,48 @@ $query = mysqli_query($con, $sql);
 
     <title>Onda Network</title>
 
+    <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
+
+    <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- DataTables -->
+
 
 </head>
 
 <body id="page-top">
 
+    <!-- Page Wrapper -->
     <div id="wrapper">
+
+        <!-- Sidebar -->
+
         <ul class="navbar-nav bg-primary-2 sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
             <br>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon">
                     <img src="./img/logo.png" alt="Logo" style="width: 120px; margin: 20px;"">
                 </div>
             </a>
+
+            <!-- Divider -->
             <br>
             <hr class=" sidebar-divider my-0">
 
-                    <!-- Nav Dashboard -->
+                    <!-- Nav Item - Dashboard -->
                     <li class="nav-item active">
                         <a class="nav-link" href="#">
                             <i class="fas fa-fw fa-tachometer-alt"></i>
                             <span>Dashboard</span></a>
                     </li>
+
+                    <!-- Divider -->
                     <hr class="sidebar-divider">
 
                     <!-- Heading -->
@@ -63,12 +80,19 @@ $query = mysqli_query($con, $sql);
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                             <i class="fas fa-fw fa-user"></i>
-                            <span>Usuarios</span>
+                            <span>Perfil</span>
                         </a>
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                                <?php
+                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
+                                $query2 = mysqli_query($con, $sql2);
+                                while ($row2 = mysqli_fetch_array($query2)) {
+                                    
+                                ?>
+                                    <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($row2['id']) ?>">Ver Perfil</a>
+                                <?php } ?>
                             </div>
                         </div>
                     </li>
@@ -82,26 +106,12 @@ $query = mysqli_query($con, $sql);
                         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="agregar_orden.php">Ingresar Orden</a>
-                                <a class="collapse-item" href="ordenes.php">Ver Ordenes Detalles</a>
+                                <a class="collapse-item" href="usuario.php">Ver Ordenes</a>
                             </div>
                         </div>
                     </li>
 
-                      <!-- Nav Item - Utilities Collapse Menu -->
-                      <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
-                        <i class="fas fa-solid fa-box-open"></i>
-                            <span>Proveedores</span>
-                        </a>
-                        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
-                            </div>
-                        </div>
-                    </li>
-
+                    <!-- Divider -->
                     <hr class="sidebar-divider">
 
                     <!-- Heading -->
@@ -127,6 +137,13 @@ $query = mysqli_query($con, $sql);
                                 <a class="collapse-item" href="blank.html">Blank Page</a>
                             </div>
                         </div>
+                    </li>
+
+                    <!-- Nav Item - Charts -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="charts.html">
+                            <i class="fas fa-fw fa-chart-area"></i>
+                            <span>Charts</span></a>
                     </li>
 
                     <!-- Nav Item - Tables -->
@@ -159,7 +176,7 @@ $query = mysqli_query($con, $sql);
                     <!-- Barra de Busqueda -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" id="buscar-ordenes" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" id="buscar-orden" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-primary-2" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -244,6 +261,7 @@ $query = mysqli_query($con, $sql);
 
                     <!-- Content Row -->
                     <div class="row">
+
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
@@ -270,6 +288,7 @@ $query = mysqli_query($con, $sql);
                                 </div>
                             </div>
                         </div>
+
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
@@ -302,7 +321,7 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
-                        <div id="ordenes">
+                        <div id="datos">
                         </div>
                     </div>
                 </div>
@@ -350,7 +369,7 @@ $query = mysqli_query($con, $sql);
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/orden.js"></script>
+    <script src="js/main.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->

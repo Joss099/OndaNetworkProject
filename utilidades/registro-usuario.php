@@ -18,6 +18,13 @@
 
 include('conexion.php');
 
+$sql2="SELECT * FROM usuarios";
+$query2=mysqli_query($con,$sql2);
+
+while($row = mysqli_fetch_array($query2)){
+  $result = $row;
+}
+
 if(isset($_POST['Guardar'])){
     $nombre = $_REQUEST['nombre_usuario'];
     $usuario = $_REQUEST['usuario'];
@@ -36,7 +43,19 @@ if(isset($_POST['Guardar'])){
           })
         </script>'; 
     }
-    else{
+
+    elseif($result['Usuario'] == $usuario){
+      echo '<script>
+      Swal.fire({
+          icon: "info",
+          title: "Espera...",
+          text: "Parece que este usuario ya existe",
+        }).then(function(){
+          window.location = "../visualizar_usuarios.php";
+        })
+      </script>';
+    }
+    else{      
         $sql="INSERT INTO ondaorden.usuarios VALUES (NULL, '$nombre', '$usuario', '$encriptarPass', '$foto', '$rol');";
         $query=mysqli_query($con,$sql);
 
@@ -54,6 +73,16 @@ if(isset($_POST['Guardar'])){
     }
 
 }else{
+
+  echo '<script>
+        Swal.fire({
+            icon: "error",
+            title: "No se guardo",
+            text: "No se pudo registrar el usuario.",
+          }).then(function(){
+            window.location = "../visualizar_usuarios.php";
+          })
+        </script>'; 
     
 }
 
