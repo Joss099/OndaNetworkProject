@@ -467,7 +467,7 @@ $query = mysqli_query($con, $sql);
                         </button>
                     </div>
                     <div class="modal-body">
-                        ¿Seguro que deseas eliminar este usuario?
+                        ¿Seguro que deseas eliminar este proveedor?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

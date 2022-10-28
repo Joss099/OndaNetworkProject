@@ -31,9 +31,7 @@ $reglon = $_REQUEST['reglon'];
 $descripcion = $_REQUEST['descripcion'];
 
 //Datos para la tabla ondaorden.orden_detalle
-//id orden_detalle es autoincrementable
 $no_orden = $_REQUEST['no_orden'];
-$no_detalle = $_REQUEST['no_ordendetalle'];
 $precio = $_REQUEST['precio_orden'];
 $descripcion_orden = $_REQUEST['descripcion_detalle'];
 $cantidad = $_REQUEST['cantidad'];
@@ -45,7 +43,7 @@ while($row = mysqli_fetch_array($query)){
   $result = $row;
 }
 
-if($result['Ord_Num'] == $no_orden ){
+if($result['Ord_Num'] != $no_orden ){
   echo '<script>
   Swal.fire({
       icon: "info",

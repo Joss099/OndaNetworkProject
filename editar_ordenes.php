@@ -123,6 +123,20 @@ if (!isset($query)) {
                 </div>
             </li>
 
+              <!-- Nav Item - Utilities Collapse Menu -->
+              <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                        <i class="fas fa-solid fa-box-open"></i>
+                            <span>Proveedores</span>
+                        </a>
+                        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                            </div>
+                        </div>
+                    </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
