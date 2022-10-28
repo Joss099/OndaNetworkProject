@@ -284,33 +284,33 @@ if (!isset($query)) {
                                             <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="proveedor" id="proveedor" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group" id="proveedor-editar" style="display: none;">
-                                        <label for="exampleInput">Proveedor</label>
-                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
-                                            <?php
-                                            $sql2 = "SELECT * FROM proveedores";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row2 = mysqli_fetch_array($query2)) {
-                                                echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                            <label for="exampleInput">Proveedor</label>
+                                            <select class="form-control proveedor" id="proveedor" name="proveedor">
+                                                <?php
+                                                $sql2 = "SELECT * FROM proveedores";
+                                                $query2 = mysqli_query($con, $sql2);
+                                                while ($row2 = mysqli_fetch_array($query2)) {
+                                                    echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group" id="formapago-sneditar">
                                             <label for="exampleInput">Forma de Pago</label>
                                             <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="form_pago" id="form_pago" autocomplete="off" disabled>
                                         </div>
                                         <div class="form-group" id="formapago-editar" style="display: none;">
-                                        <label for="exampleInput">Forma de Pago</label>
-                                        <select class="form-control proveedor" id="pago" name="pago">
-                                            <?php
-                                            $sql3 = "SELECT * FROM tipo_pago";
-                                            $query3 = mysqli_query($con, $sql3);
-                                            while ($row3 = mysqli_fetch_array($query3)) {
-                                                echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                            <label for="exampleInput">Forma de Pago</label>
+                                            <select class="form-control proveedor" id="pago" name="pago">
+                                                <?php
+                                                $sql3 = "SELECT * FROM tipo_pago";
+                                                $query3 = mysqli_query($con, $sql3);
+                                                while ($row3 = mysqli_fetch_array($query3)) {
+                                                    echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group">
                                             <label for="exampleInput">Responsable</label>
                                             <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
@@ -321,17 +321,17 @@ if (!isset($query)) {
                                         </div>
 
                                         <div class="form-group" id="reglon-editar" style="display: none;">
-                                        <label for="exampleInput">Reglon Presupuestario</label>
-                                        <select class="form-control proveedor" id="reglon" name="reglon">
-                                            <?php
-                                            $sql5 = "SELECT * FROM reglon_presupuestario";
-                                            $query5 = mysqli_query($con, $sql5);
-                                            while ($row5 = mysqli_fetch_array($query5)) {
-                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                            <label for="exampleInput">Reglon Presupuestario</label>
+                                            <select class="form-control proveedor" id="reglon" name="reglon">
+                                                <?php
+                                                $sql5 = "SELECT * FROM reglon_presupuestario";
+                                                $query5 = mysqli_query($con, $sql5);
+                                                while ($row5 = mysqli_fetch_array($query5)) {
+                                                    echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
                             </div>
 
                             <div class="cont-derecho">
@@ -385,16 +385,43 @@ if (!isset($query)) {
                                         <label for="exampleInput">Observaciones</label>
                                         <input value="<?php echo $row['Observaciones'] ?>" type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off" disabled>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" id="checkEditar">
                                         <div style="display: flex;">
-                                        <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
-                                        <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
+                                            <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
+                                            <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
                                         </div>
                                         <input type="submit" value="Guardar" class="btn btn-primary" style="width: 10rem ;" id="guardar" disabled>
                                     </div>
                                 </div>
                                 <br><br>
                             </div>
+
+                            <!-- Script para deshabilitar la funcion de editar una orden para el usaurio normal -->
+                            <?php
+                                        if ($_SESSION['username']) {
+                                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
+                                            $query2 = mysqli_query($con, $sql2);
+                                            while ($row4 = mysqli_fetch_array($query2)) {
+                                                $result = $row4;
+                                            }
+                                            if($result['rol']==1){
+                                                echo '<script>
+                                                document.getElementById("checkEditar").style.display = "block";
+                                                </script>';
+                                            }
+                                        } elseif ($_SESSION['username-2']) {
+                                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
+                                            $query2 = mysqli_query($con, $sql2);
+                                            while ($row4 = mysqli_fetch_array($query2)) {
+                                                $result = $row4;
+                                            }
+                                            if($result['rol']==2){
+                                                echo '<script>
+                                                document.getElementById("checkEditar").style.display = "none";
+                                                </script>';
+                                            }
+                                        }
+                                    ?>
 
                         <?php
                                     }
@@ -485,7 +512,7 @@ if (!isset($query)) {
                     document.getElementById('formapago-editar').style.display = "block";
                     document.getElementById('reglon-sneditar').style.display = "none";
                     document.getElementById('reglon-editar').style.display = "block";
-                    
+
 
                 } else {
                     document.getElementById('no_orden').disabled = true;
