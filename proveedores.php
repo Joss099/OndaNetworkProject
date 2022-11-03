@@ -1,16 +1,30 @@
 <?php
 
 session_start();
-$usuario = $_SESSION['username'];
+if (isset($_SESSION['username'])) {
+    $usuario = $_SESSION['username'];
+} elseif (isset($_SESSION['username-3'])) {
+    $usuario3 = $_SESSION['username-3'];
+}
 //comprobacion de que exista una sesion activa
-if (!isset($usuario)) {
-    header("location:./login.php");
+if (!isset($usuario) && !isset($usuario3)) {
+    header("location:login.php");
 }
 
 include("utilidades/conexion.php");
-$sql = "SELECT * from usuarios where Usuario = '$usuario'";
-$query = mysqli_query($con, $sql);
-
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,17 +90,16 @@ $query = mysqli_query($con, $sql);
             <div class="sidebar-heading">
                 Acciones
             </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Usuarios</span>
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item" id="ordenes-master">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-business-time"></i>
+                    <span>Ordenes Pendientes</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                        <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
                     </div>
                 </div>
             </li>
@@ -107,7 +120,7 @@ $query = mysqli_query($con, $sql);
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item" id="proveedores-op">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
                     <i class="fas fa-solid fa-box-open"></i>
                     <span>Proveedores</span>
@@ -115,7 +128,36 @@ $query = mysqli_query($con, $sql);
                 <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="" data-toggle="modal" data-target="#exampleModalCenter">Ingresar Proveedor</a>
+                        <a data-toggle="modal" data-target="#exampleModalCenter" class="collapse-item" href="proveedores.php">Agregar Proveedores</a>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-duotone fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Perfil</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="#">Ver Perfil</a>
                     </div>
                 </div>
             </li>
@@ -124,12 +166,12 @@ $query = mysqli_query($con, $sql);
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <!-- <div class="sidebar-heading">
                 Addons
-            </div>
+            </div> -->
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
@@ -146,24 +188,24 @@ $query = mysqli_query($con, $sql);
                         <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -222,20 +264,16 @@ $query = mysqli_query($con, $sql);
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <!-- Recorrer todos los registros -->
-                                <?php
-                                while ($row = mysqli_fetch_array($query)) {
-                                ?>
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row['Nom_User'] ?></span>
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
                             </a>
 
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row['id']) ?>">
-                                <?php } ?>
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Perfil
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
                                 </a>
                                 <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -260,6 +298,7 @@ $query = mysqli_query($con, $sql);
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Proveedores</h1>
+                        <a data-toggle="modal" data-target="#exampleModalCenter" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-solid fa-box-open text-white-50"></i> Agregar Proveedor</a>
                     </div>
 
                     <!-- Content Row -->
@@ -291,13 +330,11 @@ $query = mysqli_query($con, $sql);
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <!-- Content Row -->
 
                     <div class="row">
-
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
@@ -393,13 +430,13 @@ $query = mysqli_query($con, $sql);
         </div>
     </form>
 
-                <?php
-                    if(isset(($_REQUEST['id']))){
-                    $id = base64_decode($_REQUEST['id']);
-                    $sql = "SELECT * from proveedores where id_Prov = '$id'";
-                    $query = mysqli_query($con, $sql);
-                    }
-                ?>
+    <?php
+    if (isset(($_REQUEST['id']))) {
+        $id = base64_decode($_REQUEST['id']);
+        $sql = "SELECT * from proveedores where id_Prov = '$id'";
+        $query = mysqli_query($con, $sql);
+    }
+    ?>
 
     <form action="utilidades/editar-proveedor.php?id_proveedor=<?php echo base64_encode($id) ?>" method="POST">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -413,22 +450,22 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <div class="modal-body">
                         <!-- Body del modal -->
-                        
-                        <?php 
+
+                        <?php
                         while ($row = mysqli_fetch_array($query)) {
                         ?>
                             <label for="" style="color:rgb(26,54,78)">Nombre del Proveedor</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Nom_Prov']?>" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
+                                <input type="text" class="form-control" value="<?php echo $row['Nom_Prov'] ?>" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
                             </div>
 
                             <label for="" style="color:rgb(26,54,78)">Contacto</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Cont_Prov']?>" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
+                                <input type="text" class="form-control" value="<?php echo $row['Cont_Prov'] ?>" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
                             </div>
                             <label for="" style="color:rgb(26,54,78)">Telefono</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Tel_Prov']?>" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
+                                <input type="text" class="form-control" value="<?php echo $row['Tel_Prov'] ?>" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
                             </div>
 
                         <?php } ?>
@@ -455,39 +492,47 @@ $query = mysqli_query($con, $sql);
 
     ?>
 
-        <!-- Modal Eliminar Usuario -->
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Usuario</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Seguro que deseas eliminar este proveedor?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <?php $id = base64_decode($_REQUEST['id_proveedor']); ?>
-                        <a  href="utilidades/eliminar-proveedor.php?id_proveedor=<?php echo base64_encode($id)?>" class="btn btn-danger">Eliminar</a>
-                    </div>
+    <!-- Modal Eliminar Usuario -->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Proveedor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Seguro que deseas eliminar este proveedor?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <?php $id = base64_decode($_REQUEST['id_proveedor']); ?>
+                    <a href="utilidades/eliminar-proveedor.php?id_proveedor=<?php echo base64_encode($id) ?>" class="btn btn-danger">Eliminar</a>
                 </div>
             </div>
         </div>
+    </div>
 
     <?php
 
-if (isset(($_REQUEST['id_proveedor']))) {
-    $id = $_REQUEST['id_proveedor'];
-    if (!empty($id)) {
-        echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
+    if (isset(($_REQUEST['id_proveedor']))) {
+        $id = $_REQUEST['id_proveedor'];
+        if (!empty($id)) {
+            echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
+        }
     }
-}
 
-?>
+    ?>
+    <script>
+        <?php
+        if ($result['rol'] == 1) {
+        ?>
+            document.getElementById('ordenes-master').style.display = "none";
+        <?php } ?>
+    </script>
+
 </body>
 
 </html>

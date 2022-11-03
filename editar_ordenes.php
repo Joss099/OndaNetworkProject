@@ -6,14 +6,48 @@ session_start();
 //Sesion del usuario administrador
 $usuario = $_SESSION['username'];
 $usuario2 = $_SESSION['username-2'];
+$usuario3 = $_SESSION['username-3'];
 include("utilidades/conexion.php");
 
+if (!isset($usuario) && !isset($usuario2) && !isset($usuario3)) {
+    header("location:login.php");
+}
+
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-2'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
+
 if (empty(base64_decode($_REQUEST['id_orden']))) {
-    header("location: ../login.php");
+    header("location: login.php");
 }
 
 $id_orden = base64_decode($_REQUEST['id_orden']);
-$sql = "SELECT Num_Item, Pre_Item, Tot_Item, orden.Ord_Num, Desc_Item, Cnt_Item , date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User, date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres, Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on usuarios.id = orden.Id_User inner join `tipo de presupuesto` on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE Num_Item = $id_orden order by orden.Ord_Num";
+$sql = "SELECT Num_Item, Pre_Item, Tot_Item, orden.Ord_Num, Desc_Item, Cnt_Item,
+date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User,
+date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres,
+Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado
+from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join
+orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on
+tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on
+usuarios.id = orden.Id_User inner join `tipo de presupuesto` on 
+`tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on 
+reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE orden.Ord_Num = $id_orden order by orden.Ord_Num;";
 $query = mysqli_query($con, $sql);
 
 if (!isset($query)) {
@@ -66,7 +100,8 @@ if (!isset($query)) {
 
             <!-- Sidebar - Brand -->
             <br>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" style="cursor:pointer" href="dashboard.php">
                 <div class="sidebar-brand-icon">
                     <img src="./img/logo.png" alt="Logo" style="width: 120px; margin: 20px;"">
                 </div>
@@ -80,7 +115,7 @@ if (!isset($query)) {
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="dashboard.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -93,17 +128,16 @@ if (!isset($query)) {
                 Acciones
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Perfil</span>
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item" id="ordenes-master">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-business-time"></i>
+                    <span>Ordenes Pendientes</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ver Perfil</a>
-                        <a class="collapse-item" href="#">Editar Perfil</a>
+                        <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
                     </div>
                 </div>
             </li>
@@ -118,35 +152,65 @@ if (!isset($query)) {
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
                         <a class="collapse-item" href="agregar_orden.php">Ingresar Orden</a>
-                        <a class="collapse-item" href="dashboard.php">Ver Reportes</a>
+                        <a class="collapse-item" href="dashboard.php">Ver Ordenes</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item" id="proveedores-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                    <i class="fas fa-solid fa-box-open"></i>
+                    <span>Proveedores</span>
+                </a>
+                <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
                     </div>
                 </div>
             </li>
 
-              <!-- Nav Item - Utilities Collapse Menu -->
-              <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
-                        <i class="fas fa-solid fa-box-open"></i>
-                            <span>Proveedores</span>
-                        </a>
-                        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
-                            </div>
-                        </div>
-                    </li>
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" id="usuarios-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-duotone fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Perfil</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">Ver Perfil</a>
+                    </div>
+                </div>
+            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <!-- <div class="sidebar-heading">
                 Addons
-            </div>
+            </div> -->
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
@@ -163,24 +227,24 @@ if (!isset($query)) {
                         <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -228,38 +292,25 @@ if (!isset($query)) {
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <?php
-                            if ($_SESSION['username']) {
-                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
-                                $query2 = mysqli_query($con, $sql2);
-                            } elseif ($_SESSION['username-2']) {
-                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
-                                $query2 = mysqli_query($con, $sql2);
-                            }
 
-                            while ($row4 = mysqli_fetch_array($query2)) {
-                            ?>
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row4['Nom_User'] ?></span>
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
+                            </a>
+
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
                                 </a>
-
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row4['id']) ?>">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Perfil
-                                    </a>
-                                <?php
-                            }
-                                ?>
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cerrar Sesion
                                 </a>
-                                </div>
+                            </div>
                         </li>
 
                     </ul>
@@ -285,7 +336,7 @@ if (!isset($query)) {
                     <div class="card shadow mb-4">
                         <div class="container-1">
                             <div class="cont-izquierdo">
-                                <form action="#">
+                                <form action="" method="Post">
                                     <?php
                                     while ($row = mysqli_fetch_array($query)) {
                                     ?>
@@ -359,9 +410,21 @@ if (!isset($query)) {
                                     <input value="<?php echo $row['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="presupuesto">
                                     <label for="exampleInput">Presupuesto</label>
                                     <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
+                                </div>
+                                <div class="form-group" id="presupuesto-sneditar" style="display: none;">
+                                    <label for="exampleInput">Presupuesto</label>
+                                    <select class="form-control presupuesto" name="presupuesto">
+                                        <?php
+                                        $sql5 = "SELECT * FROM `tipo de presupuesto`";
+                                        $query5 = mysqli_query($con, $sql5);
+                                        while ($row5 = mysqli_fetch_array($query5)) {
+                                            echo '<option value="' . $row5['Id_Pres'] . '">' . $row5['Desc_Pres'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div><br>
@@ -377,14 +440,21 @@ if (!isset($query)) {
                                         <th class='' scope='col'>Total</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style='font-size: 15px;' class='text-center'><input id="no_orden2" class="form-control text-center numero" type="text" value="<?php echo $row['Num_Item'] ?>" disabled></td>
-                                        <td style='font-size: 13px' class='text-center'><input id="descripcion" class="form-control" type="text" value="<?php echo $row['Desc_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px;' class='text-center'><input id="cantidad" class="form-control text-center cantidad" type="text" value="<?php echo $row['Cnt_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px' class='text-center'><input id="precio" class="form-control text-center precio" type="text" value="<?php echo $row['Pre_Item'] ?>" disabled></td>
-                                        <td style='font-size: 15px;' class='text-center'><input style="margin-left: 1.3rem" id="impuesto" class="form-control text-center checkbox" type="checkbox" checked disabled></td>
-                                        <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $row['Tot_Item'] ?>" disabled></td>
-                                    </tr>
+                                    <?php
+                                        $ordenes = $query;
+                                        foreach ($ordenes as $ordenes) {
+                                    ?>
+
+                                        <tr>
+                                            <td style='font-size: 15px;' class='text-center'><input id="no_orden2" class="form-control text-center numero" type="text" value="<?php echo $ordenes['Num_Item'] ?>" disabled></td>
+                                            <td style='font-size: 13px' class='text-center'><input id="descripcion" class="form-control" type="text" value="<?php echo $ordenes['Desc_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px;' class='text-center'><input id="cantidad" class="form-control text-center cantidad" type="text" value="<?php echo $ordenes['Cnt_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px' class='text-center'><input id="precio" class="form-control text-center precio" type="text" value="<?php echo $ordenes['Pre_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px;' class='text-center'><input style="margin-left: 1.3rem" id="impuesto" class="form-control text-center checkbox" type="checkbox" checked disabled></td>
+                                            <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $ordenes['Tot_Item'] ?>" disabled></td>
+                                        </tr>
+                                    <?php } ?>
+
                             </table>
 
                             <div class="container-1">
@@ -412,30 +482,8 @@ if (!isset($query)) {
 
                             <!-- Script para deshabilitar la funcion de editar una orden para el usaurio normal -->
                             <?php
-                                        if ($_SESSION['username']) {
-                                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row4 = mysqli_fetch_array($query2)) {
-                                                $result = $row4;
-                                            }
-                                            if($result['rol']==1){
-                                                echo '<script>
-                                                document.getElementById("checkEditar").style.display = "block";
-                                                </script>';
-                                            }
-                                        } elseif ($_SESSION['username-2']) {
-                                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row4 = mysqli_fetch_array($query2)) {
-                                                $result = $row4;
-                                            }
-                                            if($result['rol']==2){
-                                                echo '<script>
-                                                document.getElementById("checkEditar").style.display = "none";
-                                                </script>';
-                                            }
-                                        }
-                                    ?>
+
+                            ?>
 
                         <?php
                                     }
@@ -496,20 +544,39 @@ if (!isset($query)) {
         <!-- Core plugin JavaScript-->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
+        <!-- Deshabilitar paginas para el usuario normal -->
+
+        <script>
+            <?php
+            if ($result['rol'] == 1) {
+            ?>
+                document.getElementById('proveedores-op').style.display = "block";
+                document.getElementById('usuarios-op').style.display = "block";
+                document.getElementById('ordenes-master').style.display = "none";
+
+
+            <?php } elseif ($result['rol'] == 2) {
+            ?>
+                document.getElementById('proveedores-op').style.display = "none";
+                document.getElementById('usuarios-op').style.display = "none";
+                document.getElementById('ordenes-master').style.display = "none";
+            <?php }
+            ?>
+        </script>
+
         <!-- Script para editar usuarios -->
 
         <script>
             function activar() {
                 var check = document.getElementById('exampleCheck1');
                 if (check.checked) {
-                    document.getElementById('no_orden').disabled = false;
+
                     document.getElementById('proveedor').disabled = false;
                     document.getElementById('form_pago').disabled = false;
-                    document.getElementById('responsable').disabled = false;
+                    document.getElementById('responsable').disabled = true;
                     document.getElementById('reglon').disabled = false;
                     document.getElementById('fecha').disabled = false;
                     document.getElementById('presupuesto').disabled = false;
-                    document.getElementById('no_orden2').disabled = false;
                     document.getElementById('descripcion').disabled = false;
                     document.getElementById('cantidad').disabled = false;
                     document.getElementById('precio').disabled = false;
@@ -526,17 +593,18 @@ if (!isset($query)) {
                     document.getElementById('formapago-editar').style.display = "block";
                     document.getElementById('reglon-sneditar').style.display = "none";
                     document.getElementById('reglon-editar').style.display = "block";
+                    document.getElementById('presupuesto').style.display = "none";
+                    document.getElementById('presupuesto-sneditar').style.display = "block";
 
 
                 } else {
-                    document.getElementById('no_orden').disabled = true;
+
                     document.getElementById('proveedor').disabled = true;
                     document.getElementById('form_pago').disabled = true;
                     document.getElementById('responsable').disabled = true;
                     document.getElementById('reglon').disabled = true;
                     document.getElementById('fecha').disabled = true;
                     document.getElementById('presupuesto').disabled = true;
-                    document.getElementById('no_orden2').disabled = true;
                     document.getElementById('descripcion').disabled = true;
                     document.getElementById('cantidad').disabled = true;
                     document.getElementById('precio').disabled = true;
@@ -553,9 +621,12 @@ if (!isset($query)) {
                     document.getElementById('formapago-editar').style.display = "none";
                     document.getElementById('reglon-sneditar').style.display = "block";
                     document.getElementById('reglon-editar').style.display = "none";
+                    document.getElementById('presupuesto-sneditar').style.display = "none";
+                    document.getElementById('presupuesto').style.display = "block";
                 }
             }
         </script>
+
 </body>
 
 </html>

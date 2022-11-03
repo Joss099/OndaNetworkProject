@@ -1,18 +1,25 @@
 <?php
 
 session_start();
-$usuario2 = $_SESSION['username-2'];
+
+if (isset($_SESSION['username-3'])) {
+    $usuario = $_SESSION['username-3'];
+} 
+
 //comprobacion de que exista una sesion activa
-if (!isset($usuario2)) {
+if (!isset($usuario)) {
     header("location:./login.php");
 }
 
 include("utilidades/conexion.php");
-$sql = "SELECT * from usuarios where Usuario = '$usuario2'";
-$query = mysqli_query($con, $sql);
-
+if (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -27,48 +34,32 @@ $query = mysqli_query($con, $sql);
 
     <title>Onda Network</title>
 
-    <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
-
-    <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-    <!-- DataTables -->
-
 
 </head>
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
     <div id="wrapper">
-
-        <!-- Sidebar -->
-
         <ul class="navbar-nav bg-primary-2 sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
             <br>
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon">
                     <img src="./img/logo.png" alt="Logo" style="width: 120px; margin: 20px;"">
                 </div>
             </a>
-
-            <!-- Divider -->
             <br>
             <hr class=" sidebar-divider my-0">
 
-                    <!-- Nav Item - Dashboard -->
+                    <!-- Nav Dashboard -->
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="">
                             <i class="fas fa-fw fa-tachometer-alt"></i>
                             <span>Dashboard</span></a>
                     </li>
-
-                    <!-- Divider -->
                     <hr class="sidebar-divider">
 
                     <!-- Heading -->
@@ -76,28 +67,21 @@ $query = mysqli_query($con, $sql);
                         Acciones
                     </div>
 
-                    <!-- Nav Item - Pages Collapse Menu -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                            <i class="fas fa-fw fa-user"></i>
-                            <span>Perfil</span>
+
+                    <!-- Nav Item - Utilities Collapse Menu -->
+                    <li class="nav-item" id="ordenes-master">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                            <i class="fas fa-business-time"></i>
+                            <span>Ordenes Pendientes</span>
                         </a>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <?php
-                                $sql2 = "SELECT * from usuarios where Usuario = '$usuario2'";
-                                $query2 = mysqli_query($con, $sql2);
-                                while ($row2 = mysqli_fetch_array($query2)) {
-                                    
-                                ?>
-                                    <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($row2['id']) ?>">Ver Perfil</a>
-                                <?php } ?>
+                                <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
                             </div>
                         </div>
                     </li>
 
-                    <!-- Nav Item - Utilities Collapse Menu -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                             <i class="fas fa-fw fa-paperclip"></i>
@@ -106,21 +90,65 @@ $query = mysqli_query($con, $sql);
                         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="usuario.php">Ver Ordenes</a>
+                                <a class="collapse-item" href="agregar_orden.php">Agregar Orden</a>
+                                <a id="orden-detalle-op" class="collapse-item" href="ordenes.php">Ordenes Detalles</a>
                             </div>
                         </div>
                     </li>
 
-                    <!-- Divider -->
+
+                    <!-- Nav Item - Utilities Collapse Menu -->
+                    <li class="nav-item" id="proveedores-op">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                            <i class="fas fa-solid fa-box-open"></i>
+                            <span>Proveedores</span>
+                        </a>
+                        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <hr class="sidebar-divider d-none d-md-block">
+
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item" id="usuarios-op">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-duotone fa-users"></i>
+                            <span>Usuarios</span>
+                        </a>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item" id="perfil-op">
+                        <a class="nav-link collapsed" href="perfil.php" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-fw fa-user"></i>
+                            <span>Perfil</span>
+                        </a>
+                        <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">Ver Perfil</a>
+                            </div>
+                        </div>
+                    </li>
                     <hr class="sidebar-divider">
 
                     <!-- Heading -->
-                    <div class="sidebar-heading">
+                    <!-- <div class="sidebar-heading">
                         Addons
-                    </div>
+                    </div> -->
 
                     <!-- Nav Item - Pages Collapse Menu -->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                             <i class="fas fa-fw fa-folder"></i>
                             <span>Pages</span>
@@ -137,24 +165,17 @@ $query = mysqli_query($con, $sql);
                                 <a class="collapse-item" href="blank.html">Blank Page</a>
                             </div>
                         </div>
-                    </li>
-
-                    <!-- Nav Item - Charts -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="charts.html">
-                            <i class="fas fa-fw fa-chart-area"></i>
-                            <span>Charts</span></a>
-                    </li>
+                    </li> -->
 
                     <!-- Nav Item - Tables -->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="tables.html">
                             <i class="fas fa-fw fa-table"></i>
                             <span>Tables</span></a>
-                    </li>
+                    </li> -->
 
                     <!-- Divider -->
-                    <hr class="sidebar-divider d-none d-md-block">
+                    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -176,7 +197,7 @@ $query = mysqli_query($con, $sql);
                     <!-- Barra de Busqueda -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" id="buscar-orden" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" id="buscar-ordenes" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-primary-2" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -214,28 +235,19 @@ $query = mysqli_query($con, $sql);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <!-- Recorrer todos los regiistros -->
-                                <?php
-                                while ($row = mysqli_fetch_array($query)) {
-                                ?>
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row['Nom_User'] ?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
 
 
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
                             </a>
 
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
 
-                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row['id']) ?>">
-                                <?php } ?>
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-
-                                Perfil
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
                                 </a>
-                                <!-- <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a> -->
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -252,43 +264,40 @@ $query = mysqli_query($con, $sql);
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Ordenes Pendientes</h1>
                         <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generar Reporte</a> -->
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
-
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Usuarios</div>
-                                            <!-- Consulta para el numero total de usuarios registrados -->
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Ordenes Pendientes</div>
                                             <?php
-                                            $sql2 = "SELECT COUNT(*) AS CUENTA FROM usuarios ";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row2 = mysqli_fetch_array($query2)) {
+                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden where Pagado = 0";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
                                             ?>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row2['CUENTA'] ?></div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row3['ORDEN'] ?></div>
                                             <?php
-                                            }
-                                            ?>
+                                            } ?>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                                            <i class="fas fa-business-time fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
@@ -296,9 +305,9 @@ $query = mysqli_query($con, $sql);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Ordenes</div>
+                                                Ordenes Completadas</div>
                                             <?php
-                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden";
+                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden where pagado = 1";
                                             $query3 = mysqli_query($con, $sql3);
                                             while ($row3 = mysqli_fetch_array($query3)) {
                                             ?>
@@ -321,7 +330,7 @@ $query = mysqli_query($con, $sql);
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
-                        <div id="datos">
+                        <div id="ordenes">
                         </div>
                     </div>
                 </div>
@@ -369,11 +378,35 @@ $query = mysqli_query($con, $sql);
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/pendientes.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Deshabilitar paginas para el usuario normal -->
+
+    <script>
+        <?php
+        if ($result['rol'] == 1) {
+        ?>
+            document.getElementById('usuarios-op').style.display = "block";
+            document.getElementById('proveedores-op').style.display = "block";
+            document.getElementById('orden-detalle-op').style.display = "block";
+            document.getElementById('ordenes-master').style.display = "none";
+
+        <?php } elseif ($result['rol'] == 2) {
+        ?>
+            document.getElementById('usuarios-op').style.display = "none";
+            document.getElementById('proveedores-op').style.display = "none";
+            document.getElementById('orden-detalle-op').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "none";
+
+        <?php } elseif ($result['rol'] == 3) {
+        ?>
+            document.getElementById('ordenes-master').style.display = "block";
+        <?php } ?>
+    </script>
 
 </body>
 

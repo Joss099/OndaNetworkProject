@@ -17,7 +17,7 @@
 
 include("conexion.php");
 
-$id = $_GET['id_orden'];
+$id = base64_decode($_GET['id_orden']);
 
 
 $sql = "DELETE FROM orden_detalle WHERE Num_Item = $id";

@@ -3,7 +3,32 @@ error_reporting(E_ALL ^ E_WARNING);
 error_reporting(0);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
+session_start();
+if (isset($_SESSION['username'])) {
+    $usuario = $_SESSION['username'];
+} elseif (isset($_SESSION['username-2'])) {
+    $usuario2 = $_SESSION['username-2'];
+}
+
 include("utilidades/conexion.php");
+
+if (!empty($id)) {
+    header("location:login.php");
+}
+
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-2'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 
 $id = base64_decode($_REQUEST['id']);
 $sql = "SELECT * from usuarios where id = $id";
@@ -46,7 +71,7 @@ $query = mysqli_query($con, $sql);
 
             <!-- Sidebar - Brand -->
             <br>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" style="cursor:pointer" href="dashboard.php">
                 <div class="sidebar-brand-icon">
                     <img src="./img/logo.png" alt="Logo" style="width: 120px; margin: 20px;"">
                 </div>
@@ -73,32 +98,47 @@ $query = mysqli_query($con, $sql);
                 Acciones
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Perfil</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ver Perfil</a>
-                        <a class="collapse-item" href="#">Editar Perfil</a>
-                    </div>
-                </div>
-            </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Reportes</span>
+                    <span>Ordenes</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ingresar Reporte</a>
-                        <a class="collapse-item" href="#">Ver Reportes</a>
+                        <a class="collapse-item" href="agregar_orden.php">Ingresar Orden</a>
+                        <a class="collapse-item" href="dashboard.php">Ver Ordenes</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item" id="proveedores-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                    <i class="fas fa-solid fa-box-open"></i>
+                    <span>Proveedores</span>
+                </a>
+                <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider" id="linea-op">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" id="usuarios-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-duotone fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
                     </div>
                 </div>
             </li>
@@ -107,12 +147,12 @@ $query = mysqli_query($con, $sql);
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <!-- <div class="sidebar-heading">
                 Addons
-            </div>
+            </div> -->
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
@@ -129,24 +169,24 @@ $query = mysqli_query($con, $sql);
                         <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -200,7 +240,7 @@ $query = mysqli_query($con, $sql);
                                 ?>
 
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row['Nom_User'] ?></span>
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                    <img class="img-profile rounded-circle" src="<?php echo $row['foto'] ?>">
                             </a>
 
                             <!-- Dropdown - User Information -->
@@ -244,9 +284,9 @@ $query = mysqli_query($con, $sql);
 
                     <div class="card shadow mb-4 usuario-st" style="padding: 2rem 25rem 6rem 25rem">
                         <div>
-                            <form action="utilidades/editar-usuario.php?id_usuario=<?php echo $row['id']?>" method="POST">
+                            <form action="utilidades/editar-usuario.php?id_usuario=<?php echo $row['id'] ?>" method="POST">
                                 <div class="form-group">
-                                    <img src="img/undraw_profile.svg" width="90px" alt="">
+                                    <img src="<?php echo $row['foto'] ?>" width="90px" alt="">
                                 </div>
 
                                 <div class="form-group">
@@ -260,16 +300,16 @@ $query = mysqli_query($con, $sql);
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Contraseña</label>
-                                    <input type="password" class="form-control" name="contra" value="<?php echo $row['Pass']; ?>" id="contra"  disabled>
-                                </div> 
-                                   <?php } ?>
-     
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="exampleCheck1" onclick="habilitar();">
-                                    <label class="form-check-label" for="exampleCheck1">Editar campos</label>
+                                    <input type="password" class="form-control" name="contra" value="<?php echo $row['Pass']; ?>" id="contra" disabled>
                                 </div>
-                                <br>
-                                <button type="submit" class="btn btn-primary"" id="guardar" disabled>Guardar</button>
+                            <?php } ?>
+
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" onclick="habilitar();">
+                                <label class="form-check-label" for="exampleCheck1">Editar campos</label>
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary"" id="guardar" disabled>Guardar</button>
                             </form>
                         </div>
                     </div>
@@ -346,6 +386,27 @@ $query = mysqli_query($con, $sql);
             }
         }
     </script>
+
+<script>
+        <?php
+        if ($result['rol'] == 1) {
+        ?>
+            document.getElementById('usuarios-op').style.display = "block";
+            document.getElementById('proveedores-op').style.display = "block";
+            document.getElementById('orden-detalle-op').style.display = "block";
+            document.getElementById('linea-op').style.display = "block";
+
+        <?php } elseif ($result['rol'] == 2) {
+        ?>
+            document.getElementById('usuarios-op').style.display = "none";
+            document.getElementById('proveedores-op').style.display = "none";
+            document.getElementById('orden-detalle-op').style.display = "none";
+            document.getElementById('linea-op').style.display = "none";
+
+        <?php }
+        ?>
+    </script>
+
 </body>
 
 </html>

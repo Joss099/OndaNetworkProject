@@ -47,13 +47,15 @@ if (!empty($id) && !empty($nombre) && !empty($usuario) && !empty($pass)) {
 
 if ($query) {
   if($row['rol']==1){
+    session_start();
+    $_SESSION['username'] = $usuario;
     echo '<script>
     Swal.fire({
         icon: "success",
         title: "Actualizado",
         text: "El usuario se ha actualizado correctamente",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../dashboard.php";
       })
     </script>';
   }
@@ -67,7 +69,7 @@ if ($query) {
         title: "Actualizado",
         text: "El usuario se ha actualizado correctamente",
       }).then(function(){
-        window.location = "../usuario.php";
+        window.location = "../dashboard.php";
       })
     </script>';
   }

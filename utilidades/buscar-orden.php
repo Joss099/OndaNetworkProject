@@ -9,7 +9,7 @@
     $sql4 = "SELECT * FROM ondaorden.orden_detalle WHERE Desc_Item LIKE '%".$q."%' OR Num_Item LIKE '%".$q."%' ";
     }
     session_start(); 
-    if($usuario = isset($_SESSION['username'])){
+    if($usuario = isset($_SESSION['username']) || $usuario = isset($_SESSION['username-3'])){
         $result = $con->query($sql4);
 
         if($result->num_rows > 0){
@@ -34,8 +34,8 @@
                             <td class='text-center'>".$fila['Pre_Item']."</td>
                             <td class='text-center'>".$fila['Tot_Item']."</td>
                             <td class='text-center'>".$fila['Ord_Num']."</td>
-                            <td class='text-center'><a href='editar_detalle.php?id_orden=".base64_encode($fila['Num_Item'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
-                            <a href='utilidades/eliminar-orden.php?id_orden=".$fila['Num_Item']."' class='btn btn-danger'><i class='fas fa-trash'></i></a></td>
+                            <td class='text-center'><a href='./ordenes.php?id_orden=".base64_encode($fila['Num_Item'])."' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
+                            <a href='./ordenes.php?id_orden2=".base64_encode($fila['Num_Item'])."' class='btn btn-danger'><i class='fas fa-trash'></i></a></td>
                             </tr>";
             }     
     

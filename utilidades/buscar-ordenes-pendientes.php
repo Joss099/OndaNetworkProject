@@ -2,11 +2,11 @@
 
     include("conexion.php");
     $salida = "";
-    $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where Pagado = 1 order by orden.Ord_Num Desc;";
+    $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where Pagado = 0 order by orden.Ord_Num Desc;";
     if(isset($_POST['consulta'])){
     $q = $con->real_escape_string($_POST['consulta']);
     //Se inserta el parametro en la nueva busqueda
-    $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov WHERE Nom_User LIKE '%".$q."%' OR Nom_Prov LIKE '%".$q."%' OR orden.Ord_Num LIKE '%".$q."%' ORDER BY Ord_Num Asc";
+    $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov WHERE Nom_User LIKE '%".$q."%' AND Pagado = 0 OR Nom_Prov LIKE '%".$q."%' AND Pagado = 0 OR orden.Ord_Num LIKE '%".$q."%' AND Pagado = 0";
     }
     session_start(); 
     if($usuario = isset($_SESSION['username']) || $usuario = isset($_SESSION['username-2']) || $usuario = isset($_SESSION['username-3']) ){
@@ -32,7 +32,7 @@
                             <td style='width:320px; font-size: 13px' class='text-center'>".$fila['Nom_Prov']."</td>
                             <td style='width: 100px; font-size: 12px' class='text-center'>".$fila['Fecha']."</td>
                             <td style='font-size: 13px' class='text-center'>".$fila['Desc_Orden']."</td>
-                            <td class='text-center'><a href='editar_ordenes.php?id_orden=".base64_encode($fila['Ord_Num'])."' class='btn btn-primary'><i class='fa fa-thin fa-eye'fa ></i></a>
+                            <td class='text-center'><a href='editar_ordenes.php?id_orden=".base64_encode($fila['Ord_Num'])."' class='btn btn-primary'><i class='fa fa-money-bill'></i></a>
                             </tr>";
             }     
     

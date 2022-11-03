@@ -83,8 +83,8 @@
 }
 
 .boton-enviar{
-    padding-top: 1rem;
-    padding-left: 50rem !important;
+    padding-top: -5rem !important;
+    padding-left: 46rem !important;
 }
 
 .boton-enviar input[type="submit"]{

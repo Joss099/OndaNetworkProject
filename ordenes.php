@@ -1,15 +1,32 @@
 <?php
 
 session_start();
-$usuario = $_SESSION['username'];
+
+if (isset($_SESSION['username'])) {
+    $usuario = $_SESSION['username'];
+} elseif (isset($_SESSION['username-3'])) {
+    $usuario3 = $_SESSION['username-3'];
+}
 //comprobacion de que exista una sesion activa
-if (!isset($usuario)) {
+if (!isset($usuario) && !isset($usuario3)) {
     header("location:./login.php");
 }
 
 include("utilidades/conexion.php");
-$sql = "SELECT * from usuarios where Usuario = '$usuario'";
-$query = mysqli_query($con, $sql);
+
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 
 ?>
 
@@ -76,20 +93,19 @@ $query = mysqli_query($con, $sql);
                         Acciones
                     </div>
 
-                    <!-- Nav Item - Pages Collapse Menu -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                            <i class="fas fa-fw fa-user"></i>
-                            <span>Usuarios</span>
+                    <!-- Nav Item - Utilities Collapse Menu -->
+                    <li class="nav-item" id="ordenes-master">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                            <i class="fas fa-business-time"></i>
+                            <span>Ordenes Pendientes</span>
                         </a>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                                <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
                             </div>
                         </div>
                     </li>
-
                     <!-- Nav Item - Utilities Collapse Menu -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
@@ -105,16 +121,60 @@ $query = mysqli_query($con, $sql);
                         </div>
                     </li>
 
+                    <!-- Nav Item - Utilities Collapse Menu -->
+                    <li class="nav-item" id="proveedores-op">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                            <i class="fas fa-solid fa-box-open"></i>
+                            <span>Proveedores</span>
+                        </a>
+                        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <hr class="sidebar-divider">
+
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-duotone fa-users"></i>
+                            <span>Usuarios</span>
+                        </a>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Pages Collapse Menu -->
+                    <li class="nav-item" id="perfil-op">
+                        <a class="nav-link collapsed" href="perfil.php" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
+                            <i class="fas fa-fw fa-user"></i>
+                            <span>Perfil</span>
+                        </a>
+                        <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">Ver Perfil</a>
+                            </div>
+                        </div>
+                    </li>
+
                     <!-- Divider -->
                     <hr class="sidebar-divider">
 
                     <!-- Heading -->
-                    <div class="sidebar-heading">
+                    <!-- <div class="sidebar-heading">
                         Addons
-                    </div>
+                    </div> -->
 
                     <!-- Nav Item - Pages Collapse Menu -->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                             <i class="fas fa-fw fa-folder"></i>
                             <span>Pages</span>
@@ -131,24 +191,24 @@ $query = mysqli_query($con, $sql);
                                 <a class="collapse-item" href="blank.html">Blank Page</a>
                             </div>
                         </div>
-                    </li>
+                    </li> -->
 
                     <!-- Nav Item - Charts -->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="charts.html">
                             <i class="fas fa-fw fa-chart-area"></i>
                             <span>Charts</span></a>
-                    </li>
+                    </li> -->
 
                     <!-- Nav Item - Tables -->
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="tables.html">
                             <i class="fas fa-fw fa-table"></i>
                             <span>Tables</span></a>
-                    </li>
+                    </li> -->
 
                     <!-- Divider -->
-                    <hr class="sidebar-divider d-none d-md-block">
+                    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -208,23 +268,20 @@ $query = mysqli_query($con, $sql);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <!-- Recorrer todos los regiistros -->
-                                <?php
-                                while ($row = mysqli_fetch_array($query)) {
-                                ?>
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row['Nom_User'] ?></span>
-                                 
 
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
+
+
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
                             </a>
 
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            
-                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row['id']) ?>">
-                                <?php } ?>
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            
-                                Perfil
+
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+
+                                    Perfil
                                 </a>
                                 <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -255,6 +312,30 @@ $query = mysqli_query($con, $sql);
 
                     <!-- Content Row -->
                     <div class="row">
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Ordenes Pendientes</div>
+                                            <?php
+                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden where Pagado = 0";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
+                                            ?>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row3['ORDEN'] ?></div>
+                                            <?php
+                                            } ?>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-business-time fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -263,7 +344,7 @@ $query = mysqli_query($con, $sql);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Usuarios</div>
+                                                Usuarios Registrados</div>
                                             <!-- Consulta para el numero total de usuarios registrados -->
                                             <?php
                                             $sql2 = "SELECT COUNT(*) AS CUENTA FROM usuarios ";
@@ -290,7 +371,7 @@ $query = mysqli_query($con, $sql);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Ordenes</div>
+                                                Ordenes Completadas</div>
                                             <?php
                                             $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden";
                                             $query3 = mysqli_query($con, $sql3);
@@ -335,12 +416,106 @@ $query = mysqli_query($con, $sql);
         <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    <?php
+    if (isset(($_REQUEST['id_orden']))) {
+        $id = base64_decode($_REQUEST['id_orden']);
+        $sql = "SELECT * from orden_detalle where Num_Item = $id";
+        $query = mysqli_query($con, $sql);
+
+        while ($row = mysqli_fetch_array($query)) {
+    ?>
+            <!-- Modal para editar Orden_Detalle -->
+
+            <form action="utilidades/editar-orden.php?id_orden=<?php echo base64_encode($row['Num_Item']) ?>" method="post">
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Actualizar Detalles</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Body del modal -->
+                                <label for="" style="color:rgb(26,54,78)">Descripcion</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Desc_Item'] ?>" name="desc_orden" aria-describedby="basic-addon1" autocomplete="off">
+                                </div>
+
+                                <label for="" style="color:rgb(26,54,78)">Cantidad</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Cnt_Item'] ?>" name="cant_orden" aria-describedby="basic-addon2" autocomplete="off">
+                                </div>
+                                <label for="" style="color:rgb(26,54,78)">Precio</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Pre_Item'] ?>" name="precio_orden" aria-describedby="basic-addon3" autocomplete="off">
+                                </div>
+                                <label for="" style="color:rgb(26,54,78)">Total</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Tot_Item'] ?>" name="total_orden" aria-describedby="basic-addon3" autocomplete="off">
+                                </div>
+
+                                <!-- Fin del body del modal -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+    <?php }
+    } ?>
+
+    <?php
+
+    if (isset(($_REQUEST['id_orden']))) {
+        $id = $_REQUEST['id_orden'];
+        if (!empty($id)) {
+            echo "<script>$('#exampleModal').modal({ show:true })</script>";
+        }
+    }
+
+    ?>
+    <!-- Modal para eliminar una orden -->
+    <!-- Modal Eliminar Usuario -->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Orden Detalle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Seguro que deseas eliminar esta orden?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <?php $id = base64_decode($_REQUEST['id_orden2']); ?>
+                    <a href="utilidades/eliminar-orden.php?id_orden=<?php echo base64_encode($id) ?>" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Cerrar sesion Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -361,13 +536,24 @@ $query = mysqli_query($con, $sql);
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <?php
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    if (isset(($_REQUEST['id_orden2']))) {
+        $id = $_REQUEST['id_orden2'];
+        if (!empty($id)) {
+            echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
+        }
+    }
+
+    ?>
+
+    <script>
+        <?php
+        if($result['rol'] == 1){
+        ?>
+        document.getElementById('ordenes-master').style.display = "none";
+        <?php }?>
+    </script>
 
 </body>
 

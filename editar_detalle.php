@@ -3,10 +3,38 @@ error_reporting(E_ALL ^ E_WARNING);
 error_reporting(0);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 session_start();
-$usuario = $_SESSION['username'];
 
+//Sesion del usuario
+$usuario = $_SESSION['username'];
+$usuario2 = $_SESSION['username-2'];
+$usuario3 = $_SESSION['username-3'];
+
+if (!isset($usuario2) && !isset($usuario) && !isset($usuario3)) {
+    header('Location: login.php');
+}
 
 include("utilidades/conexion.php");
+
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-2'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
+elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 
 $id = base64_decode($_REQUEST['id_orden']);
 $sql = "SELECT * from orden_detalle WHERE Num_Item= $id";
@@ -197,25 +225,17 @@ $query = mysqli_query($con, $sql);
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <?php 
-                            $sql2 = "SELECT * from usuarios where Usuario = '$usuario'";
-                            $query2 = mysqli_query($con, $sql2);
-                            while($row4=mysqli_fetch_array($query2)){
-                            ?>
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row4['Nom_User'] ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>
                             </a>
 
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row4['id']) ?>">
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                <?php
-                                }
-                                ?>
                                 <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log

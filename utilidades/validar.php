@@ -70,9 +70,25 @@ if($array['rol']==2){
             text: "'.$array['Nom_User'].'",
             timer: 1200
           }).then(function(){
-            window.location = "../usuario.php";
+            window.location = "../dashboard.php";
           })
         </script>'; 
+}
+else 
+if($array['rol']==3){
+  $usuario3 =  $usuario;
+  session_start();
+  $_SESSION['username-3'] = $usuario3;
+  echo '<script>
+      Swal.fire({
+          icon: "success",
+          title: "Bienvenido",
+          text: "'.$array['Nom_User'].'",
+          timer: 1200
+        }).then(function(){
+          window.location = "../dashboard.php";
+        })
+      </script>'; 
 }
 }
 ?>

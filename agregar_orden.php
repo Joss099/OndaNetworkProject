@@ -3,14 +3,37 @@ error_reporting(E_ALL ^ E_WARNING);
 error_reporting(0);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 session_start();
-//Sesion del usuario administrador
+//Sesion del usuario
 $usuario = $_SESSION['username'];
+$usuario2 = $_SESSION['username-2'];
+$usuario3 = $_SESSION['username-3'];
 
-if (!isset($usuario)) {
+if (!isset($usuario2) && !isset($usuario) && !isset($usuario3)) {
     header('Location: login.php');
 }
 
 include("utilidades/conexion.php");
+
+if (isset($_SESSION['username'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-2'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
+elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+}
 ?>
 <!-- Recorrer todos los regiistros -->
 
@@ -75,6 +98,50 @@ include("utilidades/conexion.php");
             <div class="sidebar-heading">
                 Acciones
             </div>
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-paperclip"></i>
+                    <span>Ordenes</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="dashboard.php">Ver Ordenes</a>
+                        <a class="collapse-item" href="ordenes.php" id="orden-detalle-op">Ordenes Detalles</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item" id="proveedores-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
+                    <i class="fas fa-solid fa-box-open"></i>
+                    <span>Proveedores</span>
+                </a>
+                <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
+                    </div>
+                </div>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item" id="usuarios-op">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-duotone fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                    </div>
+                </div>
+            </li>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -86,36 +153,21 @@ include("utilidades/conexion.php");
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
                         <a class="collapse-item" href="#">Ver Perfil</a>
-                        <a class="collapse-item" href="#">Editar Perfil</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Ordenes</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="dashboard.php">Ver Ordenes</a>
-                        <a class="collapse-item" href="ordenes.php">Ver Ordenes Detalles</a>
-                    </div>
-                </div>
-            </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <!-- <hr class="sidebar-divider"> -->
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <!-- <div class="sidebar-heading">
                 Addons
-            </div>
+            </div> -->
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
@@ -132,21 +184,21 @@ include("utilidades/conexion.php");
                         <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -197,33 +249,28 @@ include("utilidades/conexion.php");
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <?php
-                            $sql = "SELECT * from usuarios where Usuario = '$usuario'";
-                            $query = mysqli_query($con, $sql);
-                            while ($row = mysqli_fetch_array($query)) {
-                            ?>
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row['Nom_User'] ?></span>
-                                    <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
+                                <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
+                            </a>
+
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
                                 </a>
 
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="perfil.php?id=<?php echo base64_encode($row['id']) ?>">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Perfil
-                                    </a>
-
-                                    <!-- <a class="dropdown-item" href="#">
+                                <!-- <a class="dropdown-item" href="#">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a> -->
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cerrar Sesion
-                                    </a>
-                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Cerrar Sesion
+                                </a>
+                            </div>
                         </li>
 
                     </ul>
@@ -250,61 +297,69 @@ include("utilidades/conexion.php");
                         <div class="container-1">
                             <div class="cont-izquierdo">
                                 <!-- Formulario para ingreso de orden -->
-                                <form action="utilidades/agregar-orden.php?id_usuario=<?php echo base64_encode($row['id']) ?>" method="POST">
-                                <?php
-                            }
-                                ?>
-                                <div class="form-group">
-                                    <label for="exampleInput">No. Orden</label>
-                                    <input type="number" min="1" class="form-control no_orden" name="no_orden" id="" autocomplete="off" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInput">Proveedor</label>
-                                    <select class="form-control proveedor" id="proveedor" name="proveedor" required>
+                                <form action="utilidades/agregar-orden.php?id_usuario=<?php echo base64_encode($result['id']) ?>" method="POST">
+                                    <div class="form-group">
+                                        <label for="exampleInput">No. Orden</label>
+                                        <input type="number" min="1"  class="form-control no_orden" name="no_orden" id="" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Proveedor</label>
+                                        <select class="form-control proveedor" id="proveedor" name="proveedor" required>
+                                            <?php
+                                            $sql2 = "SELECT * FROM proveedores";
+                                            $query2 = mysqli_query($con, $sql2);
+                                            while ($row2 = mysqli_fetch_array($query2)) {
+                                                echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Forma de Pago</label>
+                                        <select class="form-control proveedor" id="pago" name="pago" required>
+                                            <?php
+                                            $sql3 = "SELECT * FROM tipo_pago";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
+                                                echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Responsable</label>
                                         <?php
-                                        $sql2 = "SELECT * FROM proveedores";
-                                        $query2 = mysqli_query($con, $sql2);
-                                        while ($row2 = mysqli_fetch_array($query2)) {
-                                            echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                        if ($_SESSION['username']) {
+                                            $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+                                            $query = mysqli_query($con, $sql);
+                                            while ($row4 = mysqli_fetch_array($query)) {
+                                                $result = $row4;
+                                            }
+                                        } elseif ($_SESSION['username-2']) {
+                                            $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+                                            $query = mysqli_query($con, $sql);
+                                            while ($row4 = mysqli_fetch_array($query)) {
+                                                $result = $row4;
+                                            }
                                         }
                                         ?>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInput">Forma de Pago</label>
-                                    <select class="form-control proveedor" id="pago" name="pago" required>
-                                        <?php
-                                        $sql3 = "SELECT * FROM tipo_pago";
-                                        $query3 = mysqli_query($con, $sql3);
-                                        while ($row3 = mysqli_fetch_array($query3)) {
-                                            echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInput">Responsable</label>
-                                    <?php
-                                    $sql4 = "SELECT * from usuarios where Usuario = '$usuario'";
-                                    $query4 = mysqli_query($con, $sql4);
-                                    while ($row4 = mysqli_fetch_array($query4)) {
-                                    ?>
-                                        <input type="text" class="form-control responsable" value="<?php echo $row4['Nom_User'] ?>" name="usuario" id="usuario" autocomplete="off" disabled>
 
-                                    <?php } ?>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInput">Reglon Presupuestario</label>
-                                    <select class="form-control proveedor" id="reglon" name="reglon" required>
-                                        <?php
-                                        $sql5 = "SELECT * FROM reglon_presupuestario";
-                                        $query5 = mysqli_query($con, $sql5);
-                                        while ($row5 = mysqli_fetch_array($query5)) {
-                                            echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+                                        <input type="text" class="form-control responsable" value="<?php echo $result['Nom_User'] ?>" name="usuario" id="usuario" autocomplete="off" disabled>
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Reglon Presupuestario</label>
+                                        <select class="form-control proveedor" id="reglon" name="reglon" required>
+                                            <?php
+                                            $sql5 = "SELECT * FROM reglon_presupuestario";
+                                            $query5 = mysqli_query($con, $sql5);
+                                            while ($row5 = mysqli_fetch_array($query5)) {
+                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                             </div>
 
                             <div class="cont-derecho">
@@ -446,6 +501,24 @@ include("utilidades/conexion.php");
                     document.getElementById('totalorden').disabled = true;
                 }
             }
+        </script>
+
+        <script>
+            <?php
+            if ($result['rol'] == 1) {
+            ?>
+                document.getElementById('usuarios-op').style.display = "block";
+                document.getElementById('proveedores-op').style.display = "block";
+                document.getElementById('orden-detalle-op').style.display = "block";
+
+            <?php } elseif ($result['rol'] == 2) {
+            ?>
+                document.getElementById('usuarios-op').style.display = "none";
+                document.getElementById('proveedores-op').style.display = "none";
+                document.getElementById('orden-detalle-op').style.display = "none";
+
+            <?php }
+            ?>
         </script>
 
         <!-- Bootstrap core JavaScript-->
