@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,43 +9,43 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="./img/logo.png">
 </head>
+
 <body>
-    
+
 </body>
+
 </html>
 
-<?php 
+<?php
 
 include("conexion.php");
 
-$id = base64_decode($_GET['id_orden']);
+$id = base64_decode($_REQUEST['id_pres']);
 
+$sql = "UPDATE asignacion_presupuesto SET estado = 1, total_pres = 0  WHERE id_asig = $id";
+$query = mysqli_query($con, $sql);
 
-$sql = "DELETE FROM orden_detalle WHERE Num_Item = $id";
-$query=mysqli_query($con,$sql);
-
-if($query){
+if ($query) {
     echo '<script>
     Swal.fire({
-        icon: "warning",
-        title: "Eliminado",
-        text: "La orden ha sido eliminada correctamente",
+        icon: "success",
+        title: "Vaciado",
+        text: "El presupuesto ha sido vaciado",
       }).then(function(){
-        window.location = "../ordenes.php";
+        window.location = "../presupuestos.php";
       })
-    </script>'; 
-} else{
+    </script>';
+} else {
 
     echo '<script>
     Swal.fire({
         icon: "error",
         title: "Ups",
-        text: "No se ha podido eliminar la orden",
+        text: "No se ha podido vaciar el proveedor",
       }).then(function(){
-        window.location = "../ordenes.php";
+        window.location = "../presupuestos.php";
       })
-    </script>'; 
-
+    </script>';
 }
 
 ?>

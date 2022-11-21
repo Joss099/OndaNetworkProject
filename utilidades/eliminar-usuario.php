@@ -30,7 +30,7 @@ if($query){
         title: "Eliminado",
         text: "El usuario ha sido eliminado correctamente",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../usuarios.php";
       })
     </script>'; 
 } else{
@@ -41,7 +41,7 @@ if($query){
         title: "Ups",
         text: "No se ha podido eliminar el usuario",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../usuarios.php";
       })
     </script>'; 
 

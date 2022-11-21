@@ -59,10 +59,24 @@ if ($query) {
       })
     </script>';
   }
-  else{
+  elseif($row['rol']==2){
     $usuario2 =  $usuario;
     session_start();
     $_SESSION['username-2'] = $usuario2;
+    echo '<script>
+    Swal.fire({
+        icon: "success",
+        title: "Actualizado",
+        text: "El usuario se ha actualizado correctamente",
+      }).then(function(){
+        window.location = "../dashboard.php";
+      })
+    </script>';
+  }
+  elseif($row['rol']==3){
+    $usuario3 =  $usuario;
+    session_start();
+    $_SESSION['username-3'] = $usuario3;
     echo '<script>
     Swal.fire({
         icon: "success",

@@ -51,6 +51,9 @@ if (isset($_SESSION['username'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/ordenes.css">
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 
     <!-- DataTables -->
 
@@ -146,7 +149,7 @@ if (isset($_SESSION['username'])) {
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                                <a class="collapse-item" href="usuarios.php">Ver Usuarios</a>
                             </div>
                         </div>
                     </li>
@@ -167,48 +170,6 @@ if (isset($_SESSION['username'])) {
 
                     <!-- Divider -->
                     <hr class="sidebar-divider">
-
-                    <!-- Heading -->
-                    <!-- <div class="sidebar-heading">
-                        Addons
-                    </div> -->
-
-                    <!-- Nav Item - Pages Collapse Menu -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                            <i class="fas fa-fw fa-folder"></i>
-                            <span>Pages</span>
-                        </a>
-                        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Login Screens:</h6>
-                                <a class="collapse-item" href="login.html">Login</a>
-                                <a class="collapse-item" href="register.html">Register</a>
-                                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                                <div class="collapse-divider"></div>
-                                <h6 class="collapse-header">Other Pages:</h6>
-                                <a class="collapse-item" href="404.html">404 Page</a>
-                                <a class="collapse-item" href="blank.html">Blank Page</a>
-                            </div>
-                        </div>
-                    </li> -->
-
-                    <!-- Nav Item - Charts -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="charts.html">
-                            <i class="fas fa-fw fa-chart-area"></i>
-                            <span>Charts</span></a>
-                    </li> -->
-
-                    <!-- Nav Item - Tables -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="tables.html">
-                            <i class="fas fa-fw fa-table"></i>
-                            <span>Tables</span></a>
-                    </li> -->
-
-                    <!-- Divider -->
-                    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -396,8 +357,47 @@ if (isset($_SESSION['username'])) {
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
-                        <div id="datos">
-                        </div>
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <?php
+                        $sql4 = "SELECT * FROM ondaorden.orden_detalle order by Num_Item;";
+                        $query = mysqli_query($con, $sql4);
+
+                        ?>
+
+                        <table class='table tabla-ordenes' id='detalles-table'>
+                            <thead class='' style='background-color: rgb(26,54,78); color: white;'>
+                                <tr>
+                                    <th class='text-center' scope='col'>#</th>
+                                    <th class='text-center' style='width: 400px' scope='col'>Descripcion</th>
+                                    <th class='text-center' scope='col'>Cantidad</th>
+                                    <th class='text-center' scope='col'>Precio</th>
+                                    <th class='text-center' scope='col'>Total</th>
+                                    <th class='text-center' scope='col'>Orden</th>
+                                    <th class='text-center' scope='col'>Acciones</th>
+                            </thead>
+                            <tbody>
+                                <?php
+                                while ($fila = mysqli_fetch_array($query)) {
+                                ?>
+                                    <tr>
+                                        <td class='text-center'><?php echo $fila['Num_Item'] ?></td>
+                                        <td class='text-center'><?php echo $fila['Desc_Item'] ?></td>
+                                        <td class='text-center'><?php echo $fila['Cnt_Item'] ?></td>
+                                        <td class='text-center'><?php echo $fila['Pre_Item'] ?></td>
+                                        <td class='text-center'><?php echo $fila['Tot_Item'] ?></td>
+                                        <td class='text-center'><?php echo $fila['Ord_Num'] ?></td>
+                                        <td class='text-center'><a href='ordenes.php?id_orden="<?php echo base64_encode($fila['Num_Item'])?>"' class='btn btn-primary'><i class='fas fa-pencil-alt text-white'></i></a>
+                                            <a href='ordenes.php?id_orden2="<?php echo base64_encode($fila['Num_Item'])?>"' class='btn btn-danger'><i class='fas fa-trash'></i></a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
 
@@ -417,8 +417,7 @@ if (isset($_SESSION['username'])) {
 
     </div>
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/detalles.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -549,10 +548,25 @@ if (isset($_SESSION['username'])) {
 
     <script>
         <?php
-        if($result['rol'] == 1){
+        if ($result['rol'] == 1) {
         ?>
-        document.getElementById('ordenes-master').style.display = "none";
-        <?php }?>
+            document.getElementById('ordenes-master').style.display = "none";
+        <?php } ?>
+    </script>
+
+    <script>
+        
+        $(document).ready(function() {
+            $('#ordenes-table').DataTable({
+                 "language": {
+                     "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                 }
+             });
+             var table = $('#ordenes-table').DataTable();
+             $('#buscar-ordenes').on('keyup', function() {
+                 table.search(this.value).draw();
+             });
+         });
     </script>
 
 </body>

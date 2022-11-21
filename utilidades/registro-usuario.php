@@ -39,7 +39,7 @@ if(isset($_POST['Guardar'])){
             title: "Espera...",
             text: "Debes llenar todos los datos!",
           }).then(function(){
-            window.location = "../visualizar_usuarios.php";
+            window.location = "../usuarios.php";
           })
         </script>'; 
     }
@@ -51,7 +51,7 @@ if(isset($_POST['Guardar'])){
           title: "Espera...",
           text: "Parece que este usuario ya existe",
         }).then(function(){
-          window.location = "../visualizar_usuarios.php";
+          window.location = "../usuarios.php";
         })
       </script>';
     }
@@ -65,7 +65,7 @@ if(isset($_POST['Guardar'])){
             title: "Guardado Correctamente",
             text: "El usuario ha sido registrado.",
           }).then(function(){
-            window.location = "../visualizar_usuarios.php";
+            window.location = "../usuarios.php";
           })
         </script>'; 
 
@@ -80,7 +80,7 @@ if(isset($_POST['Guardar'])){
             title: "No se guardo",
             text: "No se pudo registrar el usuario.",
           }).then(function(){
-            window.location = "../visualizar_usuarios.php";
+            window.location = "../usuarios.php";
           })
         </script>'; 
     

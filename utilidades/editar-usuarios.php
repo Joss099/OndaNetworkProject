@@ -52,7 +52,7 @@ if ($query) {
         title: "Actualizado",
         text: "El usuario se ha actualizado correctamente",
       }).then(function(){
-        window.location = "../visualizar_usuarios.php";
+        window.location = "../usuarios.php";
       })
     </script>';
 } else {

@@ -26,7 +26,6 @@ $contacto = $_REQUEST['contacto'];
 $telefono = $_REQUEST['telefono'];
 
 if (!empty($id) && !empty($proveedor) && !empty($contacto) && !empty($telefono)) {
-  //Cuando el password del input es igual al de la base de datos
     $sql = "UPDATE proveedores SET Nom_Prov='$proveedor', Cont_Prov = '$contacto', Tel_Prov = '$telefono' WHERE id_Prov = $id;";
     $query = mysqli_query($con, $sql);
 }

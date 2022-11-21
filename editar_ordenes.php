@@ -33,12 +33,12 @@ if (isset($_SESSION['username'])) {
     }
 }
 
-if (empty(base64_decode($_REQUEST['id_orden']))) {
+if (empty($_REQUEST['id_orden'])) {
     header("location: login.php");
 }
 
-$id_orden = base64_decode($_REQUEST['id_orden']);
-$sql = "SELECT Num_Item, Pre_Item, Tot_Item, orden.Ord_Num, Desc_Item, Cnt_Item,
+$id_orden =  $_GET['id_orden'];
+$sql = "SELECT Num_Item, Pre_Item, Tot_Item,tot_Isv, isv_Item, orden.Ord_Num, Desc_Item, Cnt_Item,Iva_Item,
 date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User,
 date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres,
 Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado
@@ -50,18 +50,10 @@ usuarios.id = orden.Id_User inner join `tipo de presupuesto` on
 reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE orden.Ord_Num = $id_orden order by orden.Ord_Num;";
 $query = mysqli_query($con, $sql);
 
-if (!isset($query)) {
-    echo '<script>
-        Swal.fire({
-            icon: "error",
-            title: "ups...",
-            text: "No hemos encontrado la orden",
-          }).then(function(){
-            window.location = "dashboard.php";
-          })
-        </script>';
-}
 
+while ($row = mysqli_fetch_array($query)) {
+    $result2 = $row;
+}
 ?>
 <!-- Recorrer todos los regiistros -->
 
@@ -137,7 +129,7 @@ if (!isset($query)) {
                 <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
+                        <a class="collapse-item" href="ordenes_pendientes.php"> Ordenes Pendientes</a>
                     </div>
                 </div>
             </li>
@@ -181,7 +173,7 @@ if (!isset($query)) {
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                        <a class="collapse-item" href="usuarios.php">Ver Usuarios</a>
                     </div>
                 </div>
             </li>
@@ -204,48 +196,6 @@ if (!isset($query)) {
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <!-- <div class="sidebar-heading">
-                Addons
-            </div> -->
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li> -->
-
-            <!-- Nav Item - Charts -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li> -->
-
-            <!-- Nav Item - Tables -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li> -->
-
-            <!-- Divider -->
-            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -263,7 +213,7 @@ if (!isset($query)) {
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h4 class=" mb-0 text-gray-800">Ordenes</h4>
+                    <h4 class=" mb-0 text-gray-800">Orden No. <?php echo  $id_orden ?></h4>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -337,82 +287,63 @@ if (!isset($query)) {
                         <div class="container-1">
                             <div class="cont-izquierdo">
                                 <form action="" method="Post">
-                                    <?php
-                                    while ($row = mysqli_fetch_array($query)) {
-                                    ?>
-                                        <div class="form-group">
-                                            <label for="exampleInput">No. Orden</label>
-                                            <input value="<?php echo $row['Ord_Num'] ?>" type="text" class="form-control no_orden" name="no_orden" id="no_orden" autocomplete="off" disabled>
-                                        </div>
-                                        <div class="form-group" id="proveedor-sneditar">
-                                            <label for="exampleInput">Proveedor</label>
-                                            <input value="<?php echo $row['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="proveedor" id="proveedor" autocomplete="off" disabled>
-                                        </div>
-                                        <div class="form-group" id="proveedor-editar" style="display: none;">
-                                            <label for="exampleInput">Proveedor</label>
-                                            <select class="form-control proveedor" id="proveedor" name="proveedor">
-                                                <?php
-                                                $sql2 = "SELECT * FROM proveedores";
-                                                $query2 = mysqli_query($con, $sql2);
-                                                while ($row2 = mysqli_fetch_array($query2)) {
-                                                    echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group" id="formapago-sneditar">
-                                            <label for="exampleInput">Forma de Pago</label>
-                                            <input value="<?php echo $row['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="form_pago" id="form_pago" autocomplete="off" disabled>
-                                        </div>
-                                        <div class="form-group" id="formapago-editar" style="display: none;">
-                                            <label for="exampleInput">Forma de Pago</label>
-                                            <select class="form-control proveedor" id="pago" name="pago">
-                                                <?php
-                                                $sql3 = "SELECT * FROM tipo_pago";
-                                                $query3 = mysqli_query($con, $sql3);
-                                                while ($row3 = mysqli_fetch_array($query3)) {
-                                                    echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInput">Responsable</label>
-                                            <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
-                                        </div>
-                                        <div class="form-group" id="reglon-sneditar">
-                                            <label for="exampleInput">Reglon Presupuestario</label>
-                                            <input value="<?php echo $row['Descripcion del Reglon'] ?>" type="text" class="form-control" name="reglon" id="reglon" autocomplete="off" disabled>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">No. Orden</label>
+                                        <input value="<?php echo $result2['Ord_Num'] ?>" type="text" class="form-control no_orden" name="no_orden" id="no_orden" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group" id="proveedor-sneditar">
+                                        <label for="exampleInput">Proveedor</label>
+                                        <input value="<?php echo $result2['Nom_Prov'] ?>" type="text" class="form-control proveedor" name="proveedor" id="proveedor" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group" id="proveedor-editar" style="display: none;">
+                                        <label for="exampleInput">Proveedor</label>
+                                        <select class="form-control proveedor" id="proveedor" name="proveedor">
+                                            <?php
+                                            $sql2 = "SELECT * FROM proveedores";
+                                            $query2 = mysqli_query($con, $sql2);
+                                            while ($row2 = mysqli_fetch_array($query2)) {
+                                                echo '<option value="' . $row2['id_Prov'] . '">' . $row2['Nom_Prov'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="formapago-sneditar">
+                                        <label for="exampleInput">Forma de Pago</label>
+                                        <input value="<?php echo $result2['Nom_Tip_Pag'] ?>" type="text" class="form-control forma_pago" name="form_pago" id="form_pago" autocomplete="off" disabled>
+                                    </div>
+                                    <div class="form-group" id="formapago-editar" style="display: none;">
+                                        <label for="exampleInput">Forma de Pago</label>
+                                        <select class="form-control proveedor" id="pago" name="pago">
+                                            <?php
+                                            $sql3 = "SELECT * FROM tipo_pago";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
+                                                echo '<option value="' . $row3['Id_Tip_Pag'] . '">' . $row3['Nom_Tip_Pag'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Responsable</label>
+                                        <input value="<?php echo $result2['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
+                                    </div>
 
-                                        <div class="form-group" id="reglon-editar" style="display: none;">
-                                            <label for="exampleInput">Reglon Presupuestario</label>
-                                            <select class="form-control proveedor" id="reglon" name="reglon">
-                                                <?php
-                                                $sql5 = "SELECT * FROM reglon_presupuestario";
-                                                $query5 = mysqli_query($con, $sql5);
-                                                while ($row5 = mysqli_fetch_array($query5)) {
-                                                    echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
                             </div>
 
                             <div class="cont-derecho">
                                 <div class="form-group" id="fecha-sneditar">
                                     <label for="exampleInput">Fecha</label>
-                                    <input value="<?php echo $row['Fecha'] ?>" type="text" class="form-control fecha" name="fecha" id="fecha" autocomplete="off" disabled>
+                                    <input value="<?php echo $result2['Fecha'] ?>" type="text" class="form-control fecha" name="fecha" id="fecha" autocomplete="off" disabled>
                                 </div>
 
                                 <div class="form-group" id="fecha-editar" style="display: none;">
                                     <label for="exampleInput">Fecha</label>
-                                    <input value="<?php echo $row['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
+                                    <input value="<?php echo $result2['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
 
                                 <div class="form-group" id="presupuesto">
                                     <label for="exampleInput">Presupuesto</label>
-                                    <input value="<?php echo $row['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
+                                    <input value="<?php echo $result2['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
                                 </div>
                                 <div class="form-group" id="presupuesto-sneditar" style="display: none;">
                                     <label for="exampleInput">Presupuesto</label>
@@ -426,8 +357,50 @@ if (!isset($query)) {
                                         ?>
                                     </select>
                                 </div>
+                                <div class="form-group" id="reglon-sneditar">
+                                    <label for="exampleInput">Reglon Presupuestario</label>
+                                    <input value="<?php echo $result2['Descripcion del Reglon'] ?>" type="text" class="form-control reglon" name="reglon" id="reglon" autocomplete="off" disabled>
+                                </div>
+
+                                <div class="form-group" id="reglon-editar" style="display: none;">
+                                    <label for="exampleInput">Reglon Presupuestario</label>
+                                    <select class="form-control proveedor" id="reglon" name="reglon">
+                                        <?php
+                                        $sql5 = "SELECT * FROM reglon_presupuestario";
+                                        $query5 = mysqli_query($con, $sql5);
+                                        while ($row5 = mysqli_fetch_array($query5)) {
+                                            echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInput">Observaciones</label>
+                                    <textarea placeholder="<?php echo $result2['Observaciones'] ?>" type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off" disabled></textarea>
+                                </div>
                             </div>
-                        </div><br>
+                        </div>
+                        <div class="container-2">
+                            <div class="container-izq">
+                                <div class="form-group">
+                                    <label for="exampleInput">Descripcion</label>
+                                    <textarea placeholder="<?php echo $result2['Desc_Orden'] ?>" type="text" class="form-control descripcion2" name="descripcion2" id="descripcion2" autocomplete="off" disabled></textarea>
+                                </div>
+                            </div>
+                            <div class="container-der" style="display: flex; justify-content:space-between;">
+                                <div class="form-group" id="checkEditar">
+                                    <div style="display: flex;">
+                                        <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
+                                        <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
+                                    </div>
+                                    <input type="submit" value="Guardar" class="btn btn-info" style="width: 10rem ;" id="guardar" disabled>
+                                </div>
+                            </div>
+                            <br><br>
+                        </div>
+
+                        <br>
                         <div class="container-table">
                             <table class='table' id=''>
                                 <thead class='' style='background-color: rgb(26,54,78); color: white;'>
@@ -436,59 +409,81 @@ if (!isset($query)) {
                                         <th class='' style='width: 400px' scope='col'>Descripcion</th>
                                         <th class='' scope='col'>Cantidad</th>
                                         <th class='' scope='col'>Precio</th>
+                                        <th class='' scope='col'>Subtotal</th>
                                         <th class='' scope='col'>Impuesto</th>
+                                        <th class='' scope='col'>isv</th>
                                         <th class='' scope='col'>Total</th>
+                                        <th scope='col' id="editar-orden">Editar</th>
                                 </thead>
                                 <tbody>
                                     <?php
-                                        $ordenes = $query;
-                                        foreach ($ordenes as $ordenes) {
+                                    $ordenes = $query;
+                                    foreach ($ordenes as $ordenes => $value) {
                                     ?>
 
                                         <tr>
-                                            <td style='font-size: 15px;' class='text-center'><input id="no_orden2" class="form-control text-center numero" type="text" value="<?php echo $ordenes['Num_Item'] ?>" disabled></td>
-                                            <td style='font-size: 13px' class='text-center'><input id="descripcion" class="form-control" type="text" value="<?php echo $ordenes['Desc_Item'] ?>" disabled></td>
-                                            <td style='font-size: 15px;' class='text-center'><input id="cantidad" class="form-control text-center cantidad" type="text" value="<?php echo $ordenes['Cnt_Item'] ?>" disabled></td>
-                                            <td style='font-size: 15px' class='text-center'><input id="precio" class="form-control text-center precio" type="text" value="<?php echo $ordenes['Pre_Item'] ?>" disabled></td>
-                                            <td style='font-size: 15px;' class='text-center'><input style="margin-left: 1.3rem" id="impuesto" class="form-control text-center checkbox" type="checkbox" checked disabled></td>
-                                            <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $ordenes['Tot_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px; width: 50px' class='text-center'><input id="no_orden2" class="form-control text-center numero" type="text" value="<?php echo $ordenes + 1 ?>" disabled></td>
+                                            <td style='font-size: 13px; width: 300px' class='text-center'><input id="descripcion" class="form-control" type="text" value="<?php echo $value['Desc_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px;' class='text-center'><input id="cantidad" class="form-control text-center cantidad" type="text" value="<?php echo $value['Cnt_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px' class='text-center'><input id="precio" class="form-control text-center precio" type="text" value="<?php echo $value['Pre_Item'] ?>" disabled></td>
+                                            <td style='font-size: 15px' class='text-center'><input id="subotal" class="form-control text-center total" type="text" value="<?php echo $value['Tot_Item'] ?>" disabled></td>
+                                            <?php
+                                            if ($value['isv_Item'] > 0) {
+                                                echo "<td style='font-size: 15px;' class='text-center'><input style='margin-left: 1.3rem' id='impuesto' class='form-control text-center checkbox' type='checkbox' checked disabled></td>";
+                                            } elseif ($value['isv_Item'] == 0) {
+                                                echo "<td style='font-size: 15px;' class='text-center'><input style='margin-left: 1.3rem' id='impuesto' class='form-control text-center checkbox' type='checkbox' disabled></td>";
+                                            }
+
+                                            ?>
+                                            <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $value['isv_Item'] ?> %" autocomplete="off" disabled></td>
+                                            <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $value['tot_Isv'] ?>" autocomplete="off" disabled></td>
+
+                                            <?php
+                                            if ($result2['Pagado'] == 0) {
+                                            ?>
+                                                <td id="editar-orden-2" class='text-center'><a href='editar_ordenes.php?id_item=<?php echo $value['Num_Item'] ?>&id_orden=<?php echo $value['Ord_Num']  ?>' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
+                                                <?php
+
+                                            } elseif ($result2['Pagado'] == 1) {
+                                                ?>
+                                                <td style="display: none;" id="editar-orden-2" class='text-center'><a href='editar_ordenes.php?id_item=<?php echo $value['Num_Item'] ?>&id_orden=<?php echo $value['Ord_Num']  ?>' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
+                                                <?php
+                                            }
+                                                ?>
                                         </tr>
                                     <?php } ?>
-
                             </table>
+                            <div class="btn-agregar">
+                                <div>
+                                    <!-- Total de la orden -->
+                                    <?php
+                                    $suma = "SELECT sum(tot_Isv) as SUMA from orden_detalle where Ord_Num = $id_orden";
+                                    $query = mysqli_query($con, $suma);
+                                    while ($row = mysqli_fetch_array($query)) {
+                                        $suma = $row;
+                                    }
+                                    ?>
+                                    <div>
+                                        <label class="total2">Total de la Orden</label>
+                                        <input class="form-control text-center total2" type="number" value="<?php echo $suma['SUMA'] ?>" disabled><br><br>
+                                        <!-- <a id="btn-agregar" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sharp fa-solid fa-plus">&nbsp; Agregar Item </i></a> -->
+                                    </div>
+                                    <div class="ord-completada" id="ord-completada">
+                                        <a href="utilidades/completar-orden.php?id_orden=<?php echo base64_encode($id_orden) ?>" class="btn btn-success">Orden Completada <i class="fas fa-solid fa-check"></i></a>
+                                    </div>
+                                    <?php
+                                    $sql = "SELECT * FROM orden where Ord_Num = $id_orden";
+                                    $query = mysqli_query($con, $sql);
 
-                            <div class="container-1">
-                                <div class="container-izq">
-                                    <div class="form-group">
-                                        <label for="exampleInput">Descripcion</label>
-                                        <input value="<?php echo $row['Desc_Orden'] ?>" type="text" class="form-control descripcion2" name="descripcion2" id="descripcion2" autocomplete="off" disabled>
-                                    </div>
+                                    while ($row = mysqli_fetch_array($query)) {
+                                        $pagado = $row;
+                                    }
+                                    ?>
                                 </div>
-                                <div class="container-der" style="display: flex; justify-content:space-between;">
-                                    <div class="form-group">
-                                        <label for="exampleInput">Observaciones</label>
-                                        <input value="<?php echo $row['Observaciones'] ?>" type="text" class="form-control observaciones" name="observaciones" id="observaciones" autocomplete="off" disabled>
-                                    </div>
-                                    <div class="form-group" id="checkEditar">
-                                        <div style="display: flex;">
-                                            <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
-                                            <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
-                                        </div>
-                                        <input type="submit" value="Guardar" class="btn btn-primary" style="width: 10rem ;" id="guardar" disabled>
-                                    </div>
-                                </div>
-                                <br><br>
                             </div>
 
-                            <!-- Script para deshabilitar la funcion de editar una orden para el usaurio normal -->
-                            <?php
-
-                            ?>
-
-                        <?php
-                                    }
-                        ?>
-                        </form>
+                            <br><br>
+                            </form>
 
                         </div>
 
@@ -544,6 +539,21 @@ if (!isset($query)) {
         <!-- Core plugin JavaScript-->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
+        <!-- Script deshabilitar la edicion de ordenes completadas -->
+
+        <script>
+            <?php
+            if ($result2['Pagado'] == 1) {
+            ?>
+                document.getElementById('editar-orden').style.display = "none";
+                // document.getElementById('btn-agregar').style.display = "none";
+                document.getElementById('checkEditar').style.display = "none";
+
+            <?php
+            }
+            ?>
+        </script>
+
         <!-- Deshabilitar paginas para el usuario normal -->
 
         <script>
@@ -563,26 +573,18 @@ if (!isset($query)) {
             <?php }
             ?>
         </script>
-
-        <!-- Script para editar usuarios -->
-
         <script>
             function activar() {
                 var check = document.getElementById('exampleCheck1');
                 if (check.checked) {
 
                     document.getElementById('proveedor').disabled = false;
+                    document.getElementById('descripcion2').disabled = false;
                     document.getElementById('form_pago').disabled = false;
                     document.getElementById('responsable').disabled = true;
                     document.getElementById('reglon').disabled = false;
                     document.getElementById('fecha').disabled = false;
                     document.getElementById('presupuesto').disabled = false;
-                    document.getElementById('descripcion').disabled = false;
-                    document.getElementById('cantidad').disabled = false;
-                    document.getElementById('precio').disabled = false;
-                    document.getElementById('impuesto').disabled = false;
-                    document.getElementById('total').disabled = false;
-                    document.getElementById('descripcion2').disabled = false;
                     document.getElementById('observaciones').disabled = false;
                     document.getElementById('guardar').disabled = false;
                     document.getElementById('fecha-sneditar').style.display = "none";
@@ -597,20 +599,17 @@ if (!isset($query)) {
                     document.getElementById('presupuesto-sneditar').style.display = "block";
 
 
+
                 } else {
 
                     document.getElementById('proveedor').disabled = true;
+                    document.getElementById('descripcion2').disabled = true;
                     document.getElementById('form_pago').disabled = true;
                     document.getElementById('responsable').disabled = true;
                     document.getElementById('reglon').disabled = true;
                     document.getElementById('fecha').disabled = true;
                     document.getElementById('presupuesto').disabled = true;
-                    document.getElementById('descripcion').disabled = true;
-                    document.getElementById('cantidad').disabled = true;
-                    document.getElementById('precio').disabled = true;
                     document.getElementById('impuesto').disabled = true;
-                    document.getElementById('total').disabled = true;
-                    document.getElementById('descripcion2').disabled = true;
                     document.getElementById('observaciones').disabled = true;
                     document.getElementById('guardar').disabled = true;
                     document.getElementById('fecha-sneditar').style.display = "block";
@@ -626,6 +625,142 @@ if (!isset($query)) {
                 }
             }
         </script>
+
+        <?php
+        if (isset(($_REQUEST['id_item']))) {
+            $id =  $_REQUEST['id_item'];
+            $sql = "SELECT * from orden_detalle where Num_Item = '$id'";
+            $query = mysqli_query($con, $sql);
+        }
+        ?>
+
+        <!-- Modal para agregar un item -->
+
+        <form action="utilidades/agregar-item.php?id_orden=<?php echo $result2['Ord_Num'] ?>" method="POST">
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Agregar Item</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Body del modal -->
+                            <label for="" style="color:rgb(26,54,78)">Descripcion</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="desc_orden" aria-describedby="basic-addon1" autocomplete="off" required>
+                            </div>
+
+                            <label for="" style="color:rgb(26,54,78)">Cantidad</label>
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" min="1" name="cant_orden" aria-describedby="basic-addon2" autocomplete="off" required>
+                            </div>
+
+                            <label for="" style="color:rgb(26,54,78)">Precio</label>
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" min="1" name="precio_item" aria-describedby="basic-addon3" autocomplete="off" required>
+                            </div>
+
+                            <label for="" style="color:rgb(26,54,78)">Impuesto</label>
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" min="1" name="isv_item" aria-describedby="basic-addon3" autocomplete="off">
+                            </div>
+
+                            <!-- Fin del body del modal -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Modal para editar un item -->
+        <form action="utilidades/editar-item.php?id_item=<?php echo $id ?>&id_orden=<?php echo  $result2['Ord_Num']  ?>" method="POST">
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Actualizar Item</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Body del modal -->
+
+                            <?php
+                            while ($row = mysqli_fetch_array($query)) {
+                            ?>
+                                <label for="" style="color:rgb(26,54,78)">Descripcion</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Desc_Item'] ?>" name="desc_orden" aria-describedby="basic-addon1" autocomplete="off">
+                                </div>
+
+                                <label for="" style="color:rgb(26,54,78)">Cantidad</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Cnt_Item'] ?>" name="cant_orden" aria-describedby="basic-addon2" autocomplete="off">
+                                </div>
+                                <label for="" style="color:rgb(26,54,78)">Precio</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="<?php echo $row['Pre_Item'] ?>" name="precio_orden" aria-describedby="basic-addon3" autocomplete="off">
+                                </div>
+
+                            <?php } ?>
+                            <!-- Fin del body del modal -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <?php
+
+        if (isset(($_REQUEST['id_item']))) {
+            $id = $_REQUEST['id_item'];
+            if (!empty($id)) {
+                echo "<script>$('#exampleModal').modal({ show:true })</script>";
+            }
+        }
+
+        ?>
+
+        <script>
+            window.addEventListener('popstate', function(event) {
+                history.pushState(null, null, window.location = "dashboar.php");
+                history.pushState(null, null, window.location = "dashboard.php");
+            }, false);
+        </script>
+
+        <!-- Deshabilitar boton de completar orden -->
+
+        <script>
+            <?php
+            if ($pagado['Pagado'] == 1) {
+            ?>
+                document.getElementById('ord-completada').style.display = "none";
+
+            <?php
+            }else{
+                ?>
+                document.getElementById('ord-completada').style.display = "blovk";
+                <?php
+            }
+            ?>
+        </script>
+
+
+
 
 </body>
 

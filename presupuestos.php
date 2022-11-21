@@ -3,9 +3,7 @@
 session_start();
 if (isset($_SESSION['username'])) {
     $usuario = $_SESSION['username'];
-} elseif (isset($_SESSION['username-3'])) {
-    $usuario3 = $_SESSION['username-3'];
-}
+} 
 //comprobacion de que exista una sesion activa
 if (!isset($usuario) && !isset($usuario3)) {
     header("location:login.php");
@@ -14,12 +12,6 @@ if (!isset($usuario) && !isset($usuario3)) {
 include("utilidades/conexion.php");
 if (isset($_SESSION['username'])) {
     $sql = "SELECT * from usuarios where Usuario = '$usuario'";
-    $query = mysqli_query($con, $sql);
-    while ($row4 = mysqli_fetch_array($query)) {
-        $result = $row4;
-    }
-} elseif (isset($_SESSION['username-3'])) {
-    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
         $result = $row4;
@@ -44,14 +36,16 @@ if (isset($_SESSION['username'])) {
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
+
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/ordenes.css">
+
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Script datatables -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-
 
 
 
@@ -93,6 +87,7 @@ if (isset($_SESSION['username'])) {
             <div class="sidebar-heading">
                 Acciones
             </div>
+
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item" id="ordenes-master">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
@@ -102,7 +97,7 @@ if (isset($_SESSION['username'])) {
                 <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="ordenes_pendientes.php"> Ordenes Pendientes</a>
+                        <a class="collapse-item" href="agregar_orden.php"> Ordenes Pendientes</a>
                     </div>
                 </div>
             </li>
@@ -131,19 +126,20 @@ if (isset($_SESSION['username'])) {
                 <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a data-toggle="modal" data-target="#exampleModalCenter" class="collapse-item" href="proveedores.php">Agregar Proveedores</a>
+                        <a class="collapse-item" href="proveedores.php">Ver Proveedores</a>
                     </div>
                 </div>
             </li>
-            <hr class="sidebar-divider d-none d-md-block">
+
+            <hr class="sidebar-divider">
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-duotone fa-users"></i>
                     <span>Usuarios</span>
                 </a>
-                <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
                         <a class="collapse-item" href="usuarios.php">Ver Usuarios</a>
@@ -153,20 +149,21 @@ if (isset($_SESSION['username'])) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Perfil</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="#">Ver Perfil</a>
+                        <a class="collapse-item" href="perfil.php?id=<?php echo base64_encode($result['id']) ?>">Ver Perfil</a>
                     </div>
                 </div>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -187,7 +184,7 @@ if (isset($_SESSION['username'])) {
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" id="buscar-proveedor" class="form-control bg-light border-0 small" placeholder="Buscar proveedores..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" id="buscar-usuario" class="form-control bg-light border-0 small" placeholder="Buscar presupuesto..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-primary-2" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -224,7 +221,6 @@ if (isset($_SESSION['username'])) {
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $result['Nom_User'] ?></span>
                                 <img class="img-profile rounded-circle" src="<?php echo $result['foto'] ?>">
                             </a>
@@ -235,6 +231,7 @@ if (isset($_SESSION['username'])) {
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
+
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -253,8 +250,8 @@ if (isset($_SESSION['username'])) {
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Proveedores</h1>
-                        <a data-toggle="modal" data-target="#exampleModalCenter" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-solid fa-box-open text-white-50"></i> Agregar Proveedor</a>
+                        <h1 class="h3 mb-0 text-gray-800">Asignacion de Presupuestos </h1>
+                        <a data-toggle="modal" data-target="#exampleModalCenter" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-solid fa-coins text-white-50"></i> Agregar Presupuesto</a>
                     </div>
 
                     <!-- Content Row -->
@@ -267,10 +264,9 @@ if (isset($_SESSION['username'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Proveedores Totales</div>
-                                            <!-- Consulta para el numero total de usuarios registrados -->
+                                                Presupuestos Disponibles</div>
                                             <?php
-                                            $sql2 = "SELECT count(*) as CUENTA from proveedores;";
+                                            $sql2 = "SELECT COUNT(*) AS CUENTA FROM asignacion_presupuesto where estado =0 ";
                                             $query2 = mysqli_query($con, $sql2);
                                             while ($row2 = mysqli_fetch_array($query2)) {
                                             ?>
@@ -280,54 +276,63 @@ if (isset($_SESSION['username'])) {
                                             ?>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                                            <i class="fas fa-coins fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- Content Row -->
 
                     <div class="row">
+
                     </div>
                     <div class="card shadow mb-4">
-                        <!-- ------------------------------------------- -->
-                        <!-- ------------------------------------------- -->
-                        <!-- ------------------------------------------- -->
-                        <!-- ------------------------------------------- -->
+                        <!-- Div donde se remplaza la tabla -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
 
                         <?php
-                        $sql = "SELECT id_Prov, Nom_Prov, Cont_Prov, Tel_Prov from proveedores order by Cont_Prov desc";
+                        $sql = "SELECT id_asig, Nom_User, `Descripcion del Reglon`, asignacion_presupuesto.mes_asig, asignacion_presupuesto.total_pres,
+                        asignacion_presupuesto.estado from reglon_presupuestario
+                        inner join asignacion_presupuesto on asignacion_presupuesto.id_reglon = reglon_presupuestario.Id_Reglon
+                        inner join usuarios on usuarios.id = asignacion_presupuesto.usuario_asig
+                        where asignacion_presupuesto.estado = 0;";
                         $query = mysqli_query($con, $sql);
                         ?>
-                        <table class='table' id='proveedores-table'>
+                        <table class='table' id='usuarios-table'>
                             <thead class='' style='background-color: rgb(26,54,78); color: white;'>
                                 <tr>
                                     <th class='text-center' scope='col'>#</th>
-                                    <th class='text-center' scope='col'>Proveedor</th>
-                                    <th class='text-center' scope='col'>Contacto</th>
-                                    <th class='text-center' scope='col'>Telefono</th>
-                                    <th class='text-center' scope='col'>Acciones</th>
+                                    <th class='text-center' scope='col'>Responsable</th>
+                                    <th class='text-center' scope='col'>Descripcion</th>
+                                    <th class='text-center' scope='col'>Fecha de asignacion</th>
+                                    <th class='text-center' scope='col'>Presupuesto</th>
+                                    <th class='text-center' scope='col'>Vaciar</th>
                             </thead>
                             <tbody>
                                 <?php
                                 while ($fila = mysqli_fetch_array($query)) {
                                 ?>
                                     <tr>
-                                        <td style='font-size: 13px' class='text-center'><?php echo $fila['id_Prov'] ?></td>
-                                        <td style='font-size: 13px' class='text-center' style='width: 500px'><?php echo $fila['Nom_Prov'] ?></td>
-                                        <td style='font-size: 13px' class='text-center'><?php echo $fila['Cont_Prov'] ?></td>
-                                        <td style='font-size: 13px' class='text-center'><?php echo $fila['Tel_Prov'] ?></td>
-                                        <td style='font-size: 13px' class='text-center'><a href='proveedores.php?id="<?php echo base64_encode($fila['id_Prov']) ?>"' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
-                                            <a href='proveedores.php?id_proveedor="<?php echo base64_encode($fila['id_Prov']) ?>"' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['id_asig'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['Nom_User'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['Descripcion del Reglon'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['mes_asig'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo number_format( $fila['total_pres']) ?></td>
+                                        <td style='font-size: 14px' class='text-center'><a href='presupuestos.php?id_pres=<?php echo base64_encode($fila['id_asig']) ?>' class='btn btn-info'><i class='fas fa-eraser text-white'></i></a>
+                                            <!-- <a href='usuarios.php?id_usuario="<?php echo base64_encode($fila['id']) ?>"' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a> -->
                                         </td>
                                     </tr>
                                 <?php } ?>
-                            </tbody>
+                            <tbody>
                         </table>
-
                     </div>
                 </div>
 
@@ -372,36 +377,47 @@ if (isset($_SESSION['username'])) {
         </div>
     </div>
 
+    <!-- Bootstrap core JavaScript-->
+    <script src="js/usuario.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Modal para Registrar Proveedor -->
-    <form action="utilidades/registro-proveedor.php" method="POST">
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <!-- Modal para asignar presupuesto  -->
+    <form action="utilidades/presupuesto.php?id_usuario=<?php echo base64_encode($result['id'])?>" method="POST">
+        <div  class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Registrar Proveedor</h3>
+                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Asignar Presupuesto</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="padding: 2.2rem !important">
                         <!-- Body del modal -->
-                        <label for="" style="color:rgb(26,54,78)">Nombre del Proveedor</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
+                        <label for="" style="color:rgb(26,54,78)">Reglon Presupuestario</label>
+                        <div class="input-group mb-3 pb-3 pt-2">
+                        <select class="custom-select custom-select-sm" name="reglon" style="height: 40px">
+                                <?php
+                                $sql2 = "SELECT * from reglon_presupuestario";
+                                $query1 = mysqli_query($con, $sql2);
+                                while ($row2 = mysqli_fetch_array($query1)) {
+                                    echo '<option value="' . $row2['Id_Reglon'] . '">' . $row2['Descripcion del Reglon'] . '</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
 
-                        <label for="" style="color:rgb(26,54,78)">Contacto</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
+                        <label for="" style="color:rgb(26,54,78)">Fecha de asignacion</label>
+                        <div class="input-group mb-3 pb-3 pt-2">
+                            <input type="date" class="form-control" name="fecha" aria-describedby="basic-addon2" autocomplete="off">
                         </div>
-                        <label for="" style="color:rgb(26,54,78)">Telefono</label>
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
+                        <label for="" style="color:rgb(26,54,78)">Presupuesto</label>
+                        <div class="input-group mb-3 pb-3 pt-2">
+                            <input type="number" class="form-control" name="valor" aria-describedby="basic-addon3" autocomplete="off" min=100;>
                         </div>
                         <!-- Fin del body del modal -->
                     </div>
@@ -415,86 +431,24 @@ if (isset($_SESSION['username'])) {
         </div>
     </form>
 
-    <?php
-    if (isset(($_REQUEST['id']))) {
-        $id = base64_decode($_REQUEST['id']);
-        $sql = "SELECT * from proveedores where id_Prov = '$id'";
-        $query = mysqli_query($con, $sql);
-    }
-    ?>
-
-    <form action="utilidades/editar-proveedor.php?id_proveedor=<?php echo base64_encode($id) ?>" method="POST">
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Actualizar Proveedor</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Body del modal -->
-
-                        <?php
-                        while ($row = mysqli_fetch_array($query)) {
-                        ?>
-                            <label for="" style="color:rgb(26,54,78)">Nombre del Proveedor</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Nom_Prov'] ?>" name="nom_proveedor" aria-describedby="basic-addon1" autocomplete="off">
-                            </div>
-
-                            <label for="" style="color:rgb(26,54,78)">Contacto</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Cont_Prov'] ?>" name="contacto" aria-describedby="basic-addon2" autocomplete="off">
-                            </div>
-                            <label for="" style="color:rgb(26,54,78)">Telefono</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="<?php echo $row['Tel_Prov'] ?>" name="telefono" aria-describedby="basic-addon3" autocomplete="off">
-                            </div>
-
-                        <?php } ?>
-                        <!-- Fin del body del modal -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <?php
-
-    if (isset(($_REQUEST['id']))) {
-        $id = $_REQUEST['id'];
-        if (!empty($id)) {
-            echo "<script>$('#exampleModal').modal({ show:true })</script>";
-        }
-    }
-
-    ?>
-
-    <!-- Modal Eliminar Proveedor -->
+    <!-- Modal Vaciar Presupuesto -->
     <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Proveedor</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Vaciar Reglon Presupuestario</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    ¿Seguro que deseas eliminar este proveedor?
+                    ¿Seguro que deseas vaciar este Reglon Presupuestario?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <?php $id = base64_decode($_REQUEST['id_proveedor']); ?>
-                    <a href="utilidades/eliminar-proveedor.php?id_proveedor=<?php echo base64_encode($id) ?>" class="btn btn-danger">Eliminar</a>
+                    <?php $id = base64_decode($_REQUEST['id_pres']); ?>
+                    <a href="utilidades/vaciar-presupuesto.php?id_pres=<?php echo base64_encode($id) ?>" class="btn btn-danger">Vaciar</a>
                 </div>
             </div>
         </div>
@@ -502,14 +456,15 @@ if (isset($_SESSION['username'])) {
 
     <?php
 
-    if (isset(($_REQUEST['id_proveedor']))) {
-        $id = $_REQUEST['id_proveedor'];
+    if (isset(($_REQUEST['id_pres']))) {
+        $id = $_REQUEST['id_pres'];
         if (!empty($id)) {
             echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
         }
     }
 
     ?>
+
     <script>
         <?php
         if ($result['rol'] == 1) {
@@ -517,8 +472,6 @@ if (isset($_SESSION['username'])) {
             document.getElementById('ordenes-master').style.display = "none";
         <?php } ?>
     </script>
-
-    <script src="js/proveedor.js"></script>
 
 </body>
 

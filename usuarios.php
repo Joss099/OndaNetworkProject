@@ -47,8 +47,13 @@ if (isset($_SESSION['username'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/ordenes.css">
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Script datatables -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 
 
 
@@ -167,48 +172,6 @@ if (isset($_SESSION['username'])) {
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <!-- <div class="sidebar-heading">
-                Addons
-            </div> -->
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li> -->
-
-            <!-- Nav Item - Charts -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li> -->
-
-            <!-- Nav Item - Tables -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li> -->
-
-            <!-- Divider -->
-            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -295,7 +258,7 @@ if (isset($_SESSION['username'])) {
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Usuarios</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Usuarios Registrados</h1>
                         <a data-toggle="modal" data-target="#exampleModalCenter" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-solid fa-user text-white-50"></i> Agregar Usuario</a>
                     </div>
 
@@ -338,8 +301,41 @@ if (isset($_SESSION['username'])) {
                     </div>
                     <div class="card shadow mb-4">
                         <!-- Div donde se remplaza la tabla -->
-                        <div id="usuarios">
-                        </div>
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+                        <!-- ------------------------------------------------- -->
+
+                        <?php
+                        $sql = "SELECT id, Nom_User, Usuario, nom_rol FROM usuarios inner join roles on roles.id_roles = usuarios.rol order by id;";
+                        $query = mysqli_query($con, $sql);
+                        ?>
+                        <table class='table' id='usuarios-table'>
+                            <thead class='' style='background-color: rgb(26,54,78); color: white;'>
+                                <tr>
+                                    <th class='text-center' scope='col'>#</th>
+                                    <th class='text-center' scope='col'>Nombre</th>
+                                    <th class='text-center' scope='col'>Usuario</th>
+                                    <th class='text-center' scope='col'>Rol</th>
+                                    <th class='text-center' scope='col'>Acciones</th>
+                            </thead>
+                            <tbody>
+                                <?php
+                                while ($fila = mysqli_fetch_array($query)) {
+                                ?>
+                                    <tr>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['id'] ?></td>
+                                        <td style='font-size: 14px' class='text-center' style='width: 500px'><?php echo $fila['Nom_User'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['Usuario'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo $fila['nom_rol'] ?></td>
+                                        <td style='font-size: 14px' class='text-center'><a href='usuarios.php?id="<?php echo base64_encode($fila['id']) ?>"' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
+                                            <a href='usuarios.php?id_usuario="<?php echo base64_encode($fila['id']) ?>"' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            <tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -385,7 +381,6 @@ if (isset($_SESSION['username'])) {
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="js/usuario.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -453,7 +448,7 @@ if (isset($_SESSION['username'])) {
     }
     ?>
 
-    <!-- Modal para Registrar Usuario -->
+    <!-- Modal para Editar Usuario -->
     <form action="utilidades/editar-usuarios.php?id_usuario=<?php echo base64_encode($id) ?>" method="POST">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

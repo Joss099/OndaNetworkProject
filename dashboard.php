@@ -54,6 +54,12 @@ if (isset($_SESSION['username'])) {
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/ordenes.css">
+
+    <!-- Script datatables -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+
 
 </head>
 
@@ -83,7 +89,6 @@ if (isset($_SESSION['username'])) {
                         Acciones
                     </div>
 
-
                     <!-- Nav Item - Utilities Collapse Menu -->
                     <li class="nav-item" id="ordenes-master">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
@@ -98,6 +103,19 @@ if (isset($_SESSION['username'])) {
                         </div>
                     </li>
 
+                              <li class="nav-item" id="presupuestos">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities4" aria-expanded="true" aria-controls="collapseUtilities">
+                            <i class="fas fa-coins"></i>
+                            <span>Presupuestos</span>
+                        </a>
+                        <div id="collapseUtilities4" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Opciones:</h6>
+                                <a class="collapse-item" href="presupuestos.php"> Asignar Presupuesto</a>
+                            </div>
+                        </div>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                             <i class="fas fa-fw fa-paperclip"></i>
@@ -107,7 +125,6 @@ if (isset($_SESSION['username'])) {
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
                                 <a class="collapse-item" href="agregar_orden.php">Agregar Orden</a>
-                                <a id="orden-detalle-op" class="collapse-item" href="ordenes.php">Ordenes Detalles</a>
                             </div>
                         </div>
                     </li>
@@ -138,7 +155,7 @@ if (isset($_SESSION['username'])) {
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                                <a class="collapse-item" href="usuarios.php">Ver Usuarios</a>
                             </div>
                         </div>
                     </li>
@@ -157,41 +174,6 @@ if (isset($_SESSION['username'])) {
                         </div>
                     </li>
                     <hr class="sidebar-divider">
-
-                    <!-- Heading -->
-                    <!-- <div class="sidebar-heading">
-                        Addons
-                    </div> -->
-
-                    <!-- Nav Item - Pages Collapse Menu -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                            <i class="fas fa-fw fa-folder"></i>
-                            <span>Pages</span>
-                        </a>
-                        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Login Screens:</h6>
-                                <a class="collapse-item" href="login.html">Login</a>
-                                <a class="collapse-item" href="register.html">Register</a>
-                                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                                <div class="collapse-divider"></div>
-                                <h6 class="collapse-header">Other Pages:</h6>
-                                <a class="collapse-item" href="404.html">404 Page</a>
-                                <a class="collapse-item" href="blank.html">Blank Page</a>
-                            </div>
-                        </div>
-                    </li> -->
-
-                    <!-- Nav Item - Tables -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="tables.html">
-                            <i class="fas fa-fw fa-table"></i>
-                            <span>Tables</span></a>
-                    </li> -->
-
-                    <!-- Divider -->
-                    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -371,9 +353,45 @@ if (isset($_SESSION['username'])) {
                     <div class="row">
                     </div>
                     <div class="card shadow mb-4">
-                        <!-- Div donde se remplaza la tabla -->
-                        <div id="ordenes">
-                        </div>
+
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <!-- ----------------------------------------------------------- -->
+                        <?php
+                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where  Pagado = 1 order by orden.Ord_Num ASC;";
+                        $query = mysqli_query($con, $sql4);
+                        ?>
+                        <table class='table tabla-ordenes' id='ordenes-table'>
+                            <thead class='' style='background-color: rgb(26,54,78); color: white;'>
+                                <tr>
+                                    <th class='text-center' scope='col'>No.</th>
+                                    <th class='text-center' scope='col'>Encargado</th>
+                                    <th class='text-center' scope='col'>Proveedor</th>
+                                    <th class='text-center' scope='col'>Fecha</th>
+                                    <th class='text-center' scope='col'>Descripcion Orden</th>
+                                    <th class='text-center' scope='col'>Ver</th>
+                            </thead>
+                            <tbody>
+                                <?php
+                                while ($fila = mysqli_fetch_array($query)) {
+                                ?>
+                                    <tr>
+                                        <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Ord_Num'] ?></td>
+                                        <td style='width:240px ; font-size: 14px' class='text-center'><?php echo $fila['Nom_User'] ?></td>
+                                        <td style='width:320px; font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
+                                        <td style=' width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
+                                        <td style=' width: 550px; font-size: 13px' class='text-center'><?php echo  $fila['Desc_Orden'] ?></td>
+                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
 
@@ -419,13 +437,10 @@ if (isset($_SESSION['username'])) {
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="js/orden.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
     <!-- Deshabilitar paginas para el usuario normal -->
 
     <script>
@@ -434,21 +449,24 @@ if (isset($_SESSION['username'])) {
         ?>
             document.getElementById('usuarios-op').style.display = "block";
             document.getElementById('proveedores-op').style.display = "block";
-            document.getElementById('orden-detalle-op').style.display = "block";
             document.getElementById('ordenes-master').style.display = "none";
 
         <?php } elseif ($result['rol'] == 2) {
         ?>
             document.getElementById('usuarios-op').style.display = "none";
+            document.getElementById('presupuestos').style.display = "none";
             document.getElementById('proveedores-op').style.display = "none";
-            document.getElementById('orden-detalle-op').style.display = "none";
             document.getElementById('ordenes-master').style.display = "none";
+            document.getElementById('orden-detalle-op').style.display = "none";
 
         <?php } elseif ($result['rol'] == 3) {
         ?>
             document.getElementById('ordenes-master').style.display = "block";
+            document.getElementById('presupuestos').style.display = "none";
         <?php } ?>
     </script>
+
+    <script src="js/ordenes.js"></script>
 
 </body>
 

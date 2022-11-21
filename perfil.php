@@ -7,7 +7,7 @@ session_start();
 if (isset($_SESSION['username'])) {
     $usuario = $_SESSION['username'];
 } elseif (isset($_SESSION['username-2'])) {
-    $usuario2 = $_SESSION['username-2'];
+    $usuario3 = $_SESSION['username-2'];
 }
 
 include("utilidades/conexion.php");
@@ -23,7 +23,7 @@ if (isset($_SESSION['username'])) {
         $result = $row4;
     }
 } elseif (isset($_SESSION['username-2'])) {
-    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
         $result = $row4;
@@ -54,6 +54,7 @@ $query = mysqli_query($con, $sql);
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="shortcut icon" href="./img/logo.png">
+    <link rel="stylesheet" href="css/ordenes.css">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -98,6 +99,18 @@ $query = mysqli_query($con, $sql);
                 Acciones
             </div>
 
+            <li class="nav-item" id="ordenes-master">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-business-time"></i>
+                    <span>Ordenes Pendientes</span>
+                </a>
+                <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones:</h6>
+                        <a class="collapse-item" href="ordenes_pendientes.php"> Ordenes Pendientes</a>
+                    </div>
+                </div>
+            </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
@@ -115,6 +128,7 @@ $query = mysqli_query($con, $sql);
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
+
             <li class="nav-item" id="proveedores-op">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities2">
                     <i class="fas fa-solid fa-box-open"></i>
@@ -138,55 +152,13 @@ $query = mysqli_query($con, $sql);
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Opciones:</h6>
-                        <a class="collapse-item" href="visualizar_usuarios.php">Ver Usuarios</a>
+                        <a class="collapse-item" href="usuarios.php">Ver Usuarios</a>
                     </div>
                 </div>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <!-- <div class="sidebar-heading">
-                Addons
-            </div> -->
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li> -->
-
-            <!-- Nav Item - Charts -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li> -->
-
-            <!-- Nav Item - Tables -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li> -->
-
-            <!-- Divider -->
-            <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -288,19 +260,20 @@ $query = mysqli_query($con, $sql);
                                 <div class="form-group">
                                     <img src="<?php echo $row['foto'] ?>" width="90px" alt="">
                                 </div>
+                                <a href="" style="text-decoration: none" data-toggle="modal" data-target="#exampleModalCenter">Cambiar avatar</a><br>
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Nombre Completo</label>
-                                    <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control" name="nombre_usuario" id="nombre_usuario" aria-describedby="emailHelp" disabled autocomplete="off">
+                                    <input value="<?php echo $row['Nom_User'] ?>" type="text" class="form-control perfil" name="nombre_usuario" id="nombre_usuario" aria-describedby="emailHelp" disabled autocomplete="off">
                                     <small id="emailHelp" class="form-text text-muted"></small>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Nombre de Usuario</label>
-                                    <input value="<?php echo $row['Usuario'] ?>" type="text" class="form-control" name="usuario" id="usuario" autocomplete="off" disabled>
+                                    <input value="<?php echo $row['Usuario'] ?>" type="text" class="form-control perfil" name="usuario" id="usuario" autocomplete="off" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Contraseña</label>
-                                    <input type="password" class="form-control" name="contra" value="<?php echo $row['Pass']; ?>" id="contra" disabled>
+                                    <input type="password" class="form-control perfil" name="contra" value="<?php echo $row['Pass']; ?>" id="contra" disabled>
                                 </div>
                             <?php } ?>
 
@@ -309,7 +282,7 @@ $query = mysqli_query($con, $sql);
                                 <label class="form-check-label" for="exampleCheck1">Editar campos</label>
                             </div>
                             <br>
-                            <button type="submit" class="btn btn-primary"" id="guardar" disabled>Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="guardar" disabled>Guardar</button>
                             </form>
                         </div>
                     </div>
@@ -387,11 +360,12 @@ $query = mysqli_query($con, $sql);
         }
     </script>
 
-<script>
+    <script>
         <?php
         if ($result['rol'] == 1) {
         ?>
             document.getElementById('usuarios-op').style.display = "block";
+            document.getElementById('ordenes-master').style.display = "none";
             document.getElementById('proveedores-op').style.display = "block";
             document.getElementById('orden-detalle-op').style.display = "block";
             document.getElementById('linea-op').style.display = "block";
@@ -399,6 +373,7 @@ $query = mysqli_query($con, $sql);
         <?php } elseif ($result['rol'] == 2) {
         ?>
             document.getElementById('usuarios-op').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "none";
             document.getElementById('proveedores-op').style.display = "none";
             document.getElementById('orden-detalle-op').style.display = "none";
             document.getElementById('linea-op').style.display = "none";
@@ -406,6 +381,30 @@ $query = mysqli_query($con, $sql);
         <?php }
         ?>
     </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selecciona tu avatar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="grid-avatar">
+                        <div class="avatar6"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode(' img/undraw_profile_5.png') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_5.png" alt=""></a></div>
+                        <div class="avatar2"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode(' img/undraw_profile_1.svg') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_1.svg" alt=""></a></div>
+                        <div class="avatar5"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode('img/undraw_profile_4.png') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_4.png" alt=""></a></div>
+                        <div class="avatar3"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode('img/undraw_profile_2.svg') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_2.svg" alt=""></a></div>
+                        <div class="avatar1"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode(' img/undraw_profile_6.png') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_6.png" alt=""></a></div>
+                        <div class="avatar4"><a href="utilidades/cambiar-foto.php?foto_usuario=<?php echo base64_encode(' img/undraw_profile_3.svg') ?>&id_usuaro=<?php echo base64_encode($id) ?>"><img class="avatar" src="img/undraw_profile_3.svg" alt=""></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 
