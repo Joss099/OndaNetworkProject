@@ -3,7 +3,9 @@
 session_start();
 if (isset($_SESSION['username'])) {
     $usuario = $_SESSION['username'];
-} 
+} elseif (isset($_SESSION['username-3'])) {
+    $usuario3 = $_SESSION['username-3'];
+}
 //comprobacion de que exista una sesion activa
 if (!isset($usuario) && !isset($usuario3)) {
     header("location:login.php");
@@ -12,6 +14,12 @@ if (!isset($usuario) && !isset($usuario3)) {
 include("utilidades/conexion.php");
 if (isset($_SESSION['username'])) {
     $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
         $result = $row4;
@@ -325,7 +333,7 @@ if (isset($_SESSION['username'])) {
                                         <td style='font-size: 14px' class='text-center'><?php echo $fila['Nom_User'] ?></td>
                                         <td style='font-size: 14px' class='text-center'><?php echo $fila['Descripcion del Reglon'] ?></td>
                                         <td style='font-size: 14px' class='text-center'><?php echo $fila['mes_asig'] ?></td>
-                                        <td style='font-size: 14px' class='text-center'><?php echo number_format( $fila['total_pres']) ?></td>
+                                        <td style='font-size: 14px' class='text-center'><?php echo number_format( $fila['total_pres'], 2) ?></td>
                                         <td style='font-size: 14px' class='text-center'><a href='presupuestos.php?id_pres=<?php echo base64_encode($fila['id_asig']) ?>' class='btn btn-info'><i class='fas fa-eraser text-white'></i></a>
                                             <!-- <a href='usuarios.php?id_usuario="<?php echo base64_encode($fila['id']) ?>"' class='btn btn-danger'><i class='fas fa-trash' onclick='eliminar();'></i></a> -->
                                         </td>

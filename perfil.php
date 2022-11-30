@@ -365,7 +365,7 @@ $query = mysqli_query($con, $sql);
         if ($result['rol'] == 1) {
         ?>
             document.getElementById('usuarios-op').style.display = "block";
-            document.getElementById('ordenes-master').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "block";
             document.getElementById('proveedores-op').style.display = "block";
             document.getElementById('orden-detalle-op').style.display = "block";
             document.getElementById('linea-op').style.display = "block";

@@ -20,8 +20,9 @@
 include("conexion.php");
 
 $orden = base64_decode($_REQUEST['id_orden']);
+$autorizado = base64_decode($_REQUEST['id_autorizado']);
 
-$sql = "UPDATE  orden set Pagado = 1 WHERE Ord_Num = $orden";
+$sql = "UPDATE  orden set Pagado = 1, autorizado = '$autorizado' WHERE Ord_Num = $orden";
 $query = mysqli_query($con, $sql);
 
 if($query){

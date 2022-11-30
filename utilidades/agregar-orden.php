@@ -63,26 +63,37 @@ if ($total_orden <= $evaluar['total_pres']) {
       if ($total_item) {
         $update_total_isv = "UPDATE orden_detalle set tot_Isv = (Tot_Item * (isv_Item/100) + Tot_Item)";
         $tot_isv = mysqli_query($con, $update_total_isv);
-        if($tot_isv){
-        //Actualizar total de la orden 
-        $insert_total_orden = "UPDATE orden, (SELECT SUM(tot_Isv) as mysum FROM orden_detalle where Ord_Num = $no_orden) t set total_orden = mysum where Ord_Num = $no_orden";
-        mysqli_query($con, $insert_total_orden);
-        //Restar total de la orden al reglon seleccionado
-        $reglon_actual = $evaluar['total_pres'];
-        $update_total_reglon = "UPDATE asignacion_presupuesto SET total_pres = ($reglon_actual - $total_orden) WHERE id_reglon = $reglon AND estado = 0";
-        $update_total_reglon2 = mysqli_query($con, $update_total_reglon);
+        if ($tot_isv) {
+          //Actualizar total de la orden 
+          $insert_total_orden = "UPDATE orden, (SELECT SUM(tot_Isv) as mysum FROM orden_detalle where Ord_Num = $no_orden) t set total_orden = mysum where Ord_Num = $no_orden";
+          $update_total_orden = mysqli_query($con, $insert_total_orden);
 
-        if ($update_total_reglon2) {
-          //Selecciona el ultimo valor del reglon utilizado
-          $query3 = mysqli_query($con, "SELECT * FROM asignacion_presupuesto WHERE id_reglon = $reglon ORDER BY total_pres DESC limit 1");
-          while ($row = mysqli_fetch_array($query3)) {
-            $reglon_tot = $row;
+          //Restar total de la orden al reglon seleccionado
+          if ($update_total_orden) {
+            $total_orden2 = "SELECT * FROM orden where Ord_Num = $no_orden";
+            $valor_total = mysqli_query($con, $total_orden2);
+            while($row = mysqli_fetch_array($valor_total)){
+              $valor = $row;
+            }
+
+            $total_orden_resta = $valor['total_orden'];
+            
+            $reglon_actual = $evaluar['total_pres'];
+            $update_total_reglon = "UPDATE asignacion_presupuesto SET total_pres = ($reglon_actual - $total_orden_resta) WHERE id_reglon = $reglon AND estado = 0";
+            $update_total_reglon2 = mysqli_query($con, $update_total_reglon);
+
+            if ($update_total_reglon2) {
+              //Selecciona el ultimo valor del reglon utilizado
+              $query3 = mysqli_query($con, "SELECT * FROM asignacion_presupuesto WHERE id_reglon = $reglon ORDER BY total_pres DESC limit 1");
+              while ($row = mysqli_fetch_array($query3)) {
+                $reglon_tot = $row;
+              }
+              //Sil el total del reglon llega a cero cambia el estado a 1 
+              if ($reglon_tot['total_pres'] == 0) {
+                mysqli_query($con, "UPDATE asignacion_presupuesto SET estado = 1 where id_reglon = $reglon and estado = 0");
+              }
+            }
           }
-          //Sil el total del reglon llega a cero cambia el estado a 1 
-          if ($reglon_tot['total_pres'] == 0) {
-            mysqli_query($con, "UPDATE asignacion_presupuesto SET estado = 1 where id_reglon = $reglon and estado = 0");
-          }
-        }
         }
       }
     }

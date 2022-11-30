@@ -1,19 +1,25 @@
 <?php
 
 session_start();
-
-if (isset($_SESSION['username-3'])) {
-    $usuario = $_SESSION['username-3'];
+if (isset($_SESSION['username'])) {
+    $usuario = $_SESSION['username'];
+} elseif (isset($_SESSION['username-3'])) {
+    $usuario3 = $_SESSION['username-3'];
 }
-
 //comprobacion de que exista una sesion activa
-if (!isset($usuario)) {
-    header("location:./login.php");
+if (!isset($usuario) && !isset($usuario3)) {
+    header("location:login.php");
 }
 
 include("utilidades/conexion.php");
-if (isset($_SESSION['username-3'])) {
+if (isset($_SESSION['username'])) {
     $sql = "SELECT * from usuarios where Usuario = '$usuario'";
+    $query = mysqli_query($con, $sql);
+    while ($row4 = mysqli_fetch_array($query)) {
+        $result = $row4;
+    }
+} elseif (isset($_SESSION['username-3'])) {
+    $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
         $result = $row4;
@@ -302,7 +308,7 @@ if (isset($_SESSION['username-3'])) {
                         <!-- ----------------------------------------- -->
 
                         <?php
-                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where Pagado = 0 order by orden.Ord_Num Desc;";
+                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov, total_orden from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where Pagado = 0 order by orden.Ord_Num Desc;";
                         $query = mysqli_query($con, $sql4);
                         ?>
 
@@ -314,7 +320,8 @@ if (isset($_SESSION['username-3'])) {
                                     <th class='text-center' scope='col'>Proveedor</th>
                                     <th class='text-center' scope='col'>Fecha</th>
                                     <th class='text-center' scope='col'>Descripcion Orden</th>
-                                    <th class='text-center' scope='col'>Pagar</th>
+                                    <th class='text-center' scope='col'>Total</th>
+                                    <th class='text-center' scope='col'>Acciones</th>
                             </thead>
                             <tbody>
                                 <?php
@@ -326,7 +333,8 @@ if (isset($_SESSION['username-3'])) {
                                         <td style='font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
                                         <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
                                         <td style='font-size: 13px' class='text-center'><?php echo $fila['Desc_Orden'] ?></td>
-                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-info'><i class='fa fa-money-bill'></i></a>&nbsp; &nbsp;<a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
+                                        <td style='font-size: 13px' class='text-center'><?php echo 'L.', number_format($fila['total_orden'],2) ?></td>
+                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-info'><i class='fa fa-eye'></i></a>&nbsp; &nbsp;<a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

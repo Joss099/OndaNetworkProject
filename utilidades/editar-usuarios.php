@@ -24,7 +24,6 @@ $id = base64_decode($_GET['id_usuario']);
 $nombre = $_REQUEST['nombre_usuario'];
 $usuario = $_REQUEST['usuario'];
 $pass = $_REQUEST['contra'];
-$foto = "img/undraw_profile.svg";
 $rol = $_REQUEST['rol-usuario'];
 
 $sql2 = "SELECT id, Nom_User, Usuario, Pass, rol from usuarios where id = $id";
@@ -34,7 +33,7 @@ $row = mysqli_fetch_array($query2);
 if (!empty($id) && !empty($nombre) && !empty($usuario) && !empty($pass) && !empty($rol)) {
   //Cuando el password del input es igual al de la base de datos
   if ($row['Pass'] == $pass) {
-    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$pass', foto = '$foto', rol='$rol' WHERE id=$id;";
+    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$pass', rol='$rol' WHERE id=$id;";
     $query = mysqli_query($con, $sql);
 
     //Cuando la contraseña es diferente a la de la base de datos

@@ -363,7 +363,7 @@ if (isset($_SESSION['username'])) {
                         <!-- ----------------------------------------------------------- -->
                         <!-- ----------------------------------------------------------- -->
                         <?php
-                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where  Pagado = 1 order by orden.Ord_Num ASC;";
+                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov, total_orden from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where  Pagado = 1 order by orden.Ord_Num ASC;";
                         $query = mysqli_query($con, $sql4);
                         ?>
                         <table class='table tabla-ordenes' id='ordenes-table'>
@@ -374,6 +374,7 @@ if (isset($_SESSION['username'])) {
                                     <th class='text-center' scope='col'>Proveedor</th>
                                     <th class='text-center' scope='col'>Fecha</th>
                                     <th class='text-center' scope='col'>Descripcion Orden</th>
+                                    <th class='text-center' scope='col'>Total</th>
                                     <th class='text-center' scope='col'>Ver</th>
                             </thead>
                             <tbody>
@@ -381,12 +382,13 @@ if (isset($_SESSION['username'])) {
                                 while ($fila = mysqli_fetch_array($query)) {
                                 ?>
                                     <tr>
-                                        <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Ord_Num'] ?></td>
+                                        <td style='font-size: 12px' class='text-center'><?php echo $fila['Ord_Num'] ?></td>
                                         <td style='width:240px ; font-size: 14px' class='text-center'><?php echo $fila['Nom_User'] ?></td>
                                         <td style='width:320px; font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
                                         <td style=' width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
-                                        <td style=' width: 550px; font-size: 13px' class='text-center'><?php echo  $fila['Desc_Orden'] ?></td>
-                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
+                                        <td style=' width: 350px; font-size: 13px' class='text-center'><?php echo  $fila['Desc_Orden'] ?></td>
+                                        <td style='font-size: 13px;' class='text-center'><?php echo 'L.', number_format($fila['total_orden'],2) ?></td>
+                                        <td class='text-center'><a href='ordenes_autorizadas.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -449,7 +451,7 @@ if (isset($_SESSION['username'])) {
         ?>
             document.getElementById('usuarios-op').style.display = "block";
             document.getElementById('proveedores-op').style.display = "block";
-            document.getElementById('ordenes-master').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "block";
 
         <?php } elseif ($result['rol'] == 2) {
         ?>
@@ -462,7 +464,7 @@ if (isset($_SESSION['username'])) {
         <?php } elseif ($result['rol'] == 3) {
         ?>
             document.getElementById('ordenes-master').style.display = "block";
-            document.getElementById('presupuestos').style.display = "none";
+            document.getElementById('presupuestos').style.display = "block";
         <?php } ?>
     </script>
 

@@ -24,7 +24,6 @@ $id = $_GET['id_usuario'];
 $nombre = $_REQUEST['nombre_usuario'];
 $usuario = $_REQUEST['usuario'];
 $pass = $_REQUEST['contra'];
-$foto = "img/undraw_profile.svg";
 
 $sql2 = "SELECT id, Nom_User, Usuario, Pass, rol from usuarios where id = $id";
 $query2 = mysqli_query($con, $sql2);
@@ -33,13 +32,13 @@ $row = mysqli_fetch_array($query2);
 if (!empty($id) && !empty($nombre) && !empty($usuario) && !empty($pass)) {
   //Cuando el password del input es igual al de la base de datos
   if ($row['Pass'] == $pass) {
-    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$pass', foto = '$foto' WHERE id=$id;";
+    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$pass' WHERE id=$id;";
     $query = mysqli_query($con, $sql);
 
     //Cuando el password es diferente al de la base de datos
   } elseif ($row['Pass'] != $pass) {
     $pass = $encriptarPass2 = crypt($pass, '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
-    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$encriptarPass2', foto = '$foto' WHERE id=$id;";
+    $sql = "UPDATE usuarios SET Nom_User='$nombre', Usuario = '$usuario', Pass = '$encriptarPass2'WHERE id=$id;";
     $query = mysqli_query($con, $sql);
   }
 

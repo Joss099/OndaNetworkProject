@@ -553,7 +553,7 @@ if (isset($_SESSION['username'])) {
         <?php
         if ($result['rol'] == 1) {
         ?>
-            document.getElementById('ordenes-master').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "block";
         <?php } ?>
     </script>
 

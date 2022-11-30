@@ -41,7 +41,7 @@ $id_orden =  $_GET['id_orden'];
 $sql = "SELECT Num_Item, Pre_Item, Tot_Item,tot_Isv, isv_Item, orden.Ord_Num, Desc_Item, Cnt_Item,Iva_Item,
 date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User,
 date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres,
-Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado
+Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado, autorizado
 from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join
 orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on
 tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on
@@ -327,6 +327,10 @@ while ($row = mysqli_fetch_array($query)) {
                                         <label for="exampleInput">Responsable</label>
                                         <input value="<?php echo $result2['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Autorizada por:</label>
+                                        <input value="<?php echo $result2['autorizado'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
+                                    </div>
 
                             </div>
 
@@ -469,7 +473,7 @@ while ($row = mysqli_fetch_array($query)) {
                                         <!-- <a id="btn-agregar" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sharp fa-solid fa-plus">&nbsp; Agregar Item </i></a> -->
                                     </div>
                                     <div class="ord-completada" id="ord-completada">
-                                        <a href="utilidades/completar-orden.php?id_orden=<?php echo base64_encode($id_orden) ?>&id_autorizado=<?php echo base64_encode($result['Nom_User']) ?>" class="btn btn-success">Orden  Autorizada <i class="fas fa-solid fa-check"></i></a>
+                                        <a href="utilidades/completar-orden.php?id_orden=<?php echo base64_encode($id_orden) ?>" class="btn btn-success">Orden  Autorizada <i class="fas fa-solid fa-check"></i></a>
                                     </div>
                                     <?php
                                     $sql = "SELECT * FROM orden where Ord_Num = $id_orden";
