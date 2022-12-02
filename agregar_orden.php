@@ -321,7 +321,7 @@ if (isset($_SESSION['username'])) {
                                         <input type="date" class="form-control fecha" name="fecha" id="fechaActual" autocomplete="off">
                                     </div>
 
-                                    <div class="form-group" id="presupuesto-sneditar">
+                                    <!-- <div class="form-group" id="presupuesto-sneditar">
                                         <label for="exampleInput">Presupuesto</label>
                                         <select class="form-control presupuesto" name="presupuesto">
                                             <?php
@@ -332,7 +332,7 @@ if (isset($_SESSION['username'])) {
                                             }
                                             ?>
                                         </select>
-                                    </div>
+                                    </div> -->
 
                                     <div class="form-group" id="reglon-editar">
                                         <label for="exampleInput">Reglon Presupuestario</label>
@@ -342,10 +342,10 @@ if (isset($_SESSION['username'])) {
                                             $sql5 = "SELECT reglon_presupuestario.Id_Reglon, `Descripcion del Reglon`, total_pres, estado
                                             FROM reglon_presupuestario JOIN asignacion_presupuesto ON 
                                             asignacion_presupuesto.id_reglon = reglon_presupuestario.Id_Reglon
-                                            WHERE (total_pres>0) AND estado = 0;";
+                                            WHERE (total_pres>0) AND estado = 0";
                                             $query5 = mysqli_query($con, $sql5);
                                             while ($row5 = mysqli_fetch_array($query5)) {
-                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . ' </option>';
+                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'].'  &nbsp; ('.number_format($row5['total_pres'], 2).')</option>';
                                             }
                                             ?>
                                         </select>

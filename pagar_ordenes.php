@@ -4,28 +4,14 @@ error_reporting(0);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 session_start();
 //Sesion del usuario administrador
-$usuario = $_SESSION['username'];
-$usuario2 = $_SESSION['username-2'];
 $usuario3 = $_SESSION['username-3'];
 include("utilidades/conexion.php");
 
-if (!isset($usuario) && !isset($usuario2) && !isset($usuario3)) {
+if (!isset($usuario3)) {
     header("location:login.php");
 }
 
-if (isset($_SESSION['username'])) {
-    $sql = "SELECT * from usuarios where Usuario = '$usuario'";
-    $query = mysqli_query($con, $sql);
-    while ($row4 = mysqli_fetch_array($query)) {
-        $result = $row4;
-    }
-} elseif (isset($_SESSION['username-2'])) {
-    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
-    $query = mysqli_query($con, $sql);
-    while ($row4 = mysqli_fetch_array($query)) {
-        $result = $row4;
-    }
-} elseif (isset($_SESSION['username-3'])) {
+if (isset($_SESSION['username-3'])) {
     $sql = "SELECT * from usuarios where Usuario = '$usuario3'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
@@ -40,8 +26,8 @@ if (empty($_REQUEST['id_orden'])) {
 $id_orden =  $_GET['id_orden'];
 $sql = "SELECT Num_Item, Pre_Item, Tot_Item,tot_Isv, isv_Item, orden.Ord_Num, Desc_Item, Cnt_Item,Iva_Item,
 date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User,
-date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, 
-Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado
+date_format(fecha_pag, '%d-%m-%Y') as fecha_pag,
+Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado, autorizado
 from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join
 orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on
 tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on
@@ -282,6 +268,7 @@ while ($row = mysqli_fetch_array($query)) {
                     </div>
 
                     <!-- Datos de la orden -->
+                    <form action="utilidades/pagar-orden.php?id_orden=<?php echo base64_encode($id_orden) ?>" method="POST">
                     <div class="card shadow mb-4">
                         <div class="container-1">
                             <div class="cont-izquierdo">
@@ -326,6 +313,10 @@ while ($row = mysqli_fetch_array($query)) {
                                         <label for="exampleInput">Responsable</label>
                                         <input value="<?php echo $result2['Nom_User'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="exampleInput">Autorizada por:</label>
+                                        <input value="<?php echo $result2['autorizado'] ?>" type="text" class="form-control responsable" name="responsable" id="responsable" autocomplete="off" disabled>
+                                    </div>
 
                             </div>
 
@@ -339,7 +330,24 @@ while ($row = mysqli_fetch_array($query)) {
                                     <label for="exampleInput">Fecha</label>
                                     <input value="<?php echo $result2['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
-                                            
+
+                                <!-- <div class="form-group" id="presupuesto">
+                                    <label for="exampleInput">Presupuesto</label>
+                                    <input value="<?php echo $result2['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
+                                </div> -->
+
+                                <div class="form-group" id="presupuesto-sneditar">
+                                    <label for="exampleInput">Presupuesto</label>
+                                    <select class="form-control presupuesto" name="presupuesto">
+                                        <?php
+                                        $sql5 = "SELECT * FROM `tipo de presupuesto`";
+                                        $query5 = mysqli_query($con, $sql5);
+                                        while ($row5 = mysqli_fetch_array($query5)) {
+                                            echo '<option value="' . $row5['Id_Pres'] . '">' . $row5['Desc_Pres'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                                 <div class="form-group" id="presupuesto-sneditar" style="display: none;">
                                     <label for="exampleInput">Presupuesto</label>
                                     <select class="form-control presupuesto" name="presupuesto">
@@ -384,13 +392,13 @@ while ($row = mysqli_fetch_array($query)) {
                                 </div>
                             </div>
                             <div class="container-der" style="display: flex; justify-content:space-between;">
-                                <div class="form-group" id="checkEditar">
+                                <!-- <div class="form-group" id="checkEditar">
                                     <div style="display: flex;">
                                         <label for="exampleInput" style="margin-right:0.7rem;">Editar Orden</label>
                                         <input type="checkbox" onclick="activar();" class="form-control text-center checkbox" name="exampleCheck1" id="exampleCheck1" autocomplete="off">
                                     </div>
                                     <input type="submit" value="Guardar" class="btn btn-info" style="width: 10rem ;" id="guardar" disabled>
-                                </div>
+                                </div> -->
                             </div>
                             <br><br>
                         </div>
@@ -408,7 +416,7 @@ while ($row = mysqli_fetch_array($query)) {
                                         <th class='' scope='col'>Impuesto</th>
                                         <th class='' scope='col'>isv</th>
                                         <th class='' scope='col'>Total</th>
-                                        <th scope='col' id="editar-orden">Editar</th>
+                                        <!-- <th scope='col' id="editar-orden">Editar</th> -->
                                 </thead>
                                 <tbody>
                                     <?php
@@ -433,20 +441,20 @@ while ($row = mysqli_fetch_array($query)) {
                                             <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $value['isv_Item'] ?> %" autocomplete="off" disabled></td>
                                             <td style='font-size: 15px' class='text-center'><input id="total" class="form-control text-center total" type="text" value="<?php echo $value['tot_Isv'] ?>" autocomplete="off" disabled></td>
 
-                                            <?php
-                                            if ($result2['Pagado'] == 0) {
-                                            ?>
+                                            <!-- <?php
+                                                    if ($result2['Pagado'] == 0) {
+                                                    ?>
                                                 <td id="editar-orden-2" class='text-center'><a href='editar_ordenes.php?id_item=<?php echo $value['Num_Item'] ?>&id_orden=<?php echo $value['Ord_Num']  ?>' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
                                                 <?php
 
-                                            } elseif ($result2['Pagado'] == 1) {
+                                                    } elseif ($result2['Pagado'] == 1) {
                                                 ?>
                                                 <td style="display: none;" id="editar-orden-2" class='text-center'><a href='editar_ordenes.php?id_item=<?php echo $value['Num_Item'] ?>&id_orden=<?php echo $value['Ord_Num']  ?>' class='btn btn-info'><i class='fas fa-pencil-alt text-white'></i></a>
                                                 <?php
-                                            }
+                                                    }
                                                 ?>
                                         </tr>
-                                    <?php } ?>
+                                    <?php } ?> -->
                             </table>
                             <div class="btn-agregar">
                                 <div>
@@ -464,7 +472,7 @@ while ($row = mysqli_fetch_array($query)) {
                                         <!-- <a id="btn-agregar" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sharp fa-solid fa-plus">&nbsp; Agregar Item </i></a> -->
                                     </div>
                                     <div class="ord-completada" id="ord-completada">
-                                        <a href="utilidades/autorizar-orden.php?id_orden=<?php echo base64_encode($id_orden) ?>&id_autorizado=<?php echo base64_encode($result['Nom_User']) ?>" class="btn btn-success">Autorizar Orden <i class="fas fa-solid fa-check"></i></a>
+                                        <button type="submit" class="btn btn-success">Pagar Orden <i class="fas fa-solid fa-check"></i></button>
                                     </div>
                                     <?php
                                     $sql = "SELECT * FROM orden where Ord_Num = $id_orden";
@@ -621,115 +629,6 @@ while ($row = mysqli_fetch_array($query)) {
             }
         </script>
 
-        <?php
-        if (isset(($_REQUEST['id_item']))) {
-            $id =  $_REQUEST['id_item'];
-            $sql = "SELECT * from orden_detalle where Num_Item = '$id'";
-            $query = mysqli_query($con, $sql);
-        }
-        ?>
-
-        <!-- Modal para agregar un item -->
-
-        <form action="utilidades/agregar-item.php?id_orden=<?php echo $result2['Ord_Num'] ?>" method="POST">
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Agregar Item</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Body del modal -->
-                            <label for="" style="color:rgb(26,54,78)">Descripcion</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="desc_orden" aria-describedby="basic-addon1" autocomplete="off" required>
-                            </div>
-
-                            <label for="" style="color:rgb(26,54,78)">Cantidad</label>
-                            <div class="input-group mb-3">
-                                <input type="number" class="form-control" min="1" name="cant_orden" aria-describedby="basic-addon2" autocomplete="off" required>
-                            </div>
-
-                            <label for="" style="color:rgb(26,54,78)">Precio</label>
-                            <div class="input-group mb-3">
-                                <input type="number" class="form-control" min="1" name="precio_item" aria-describedby="basic-addon3" autocomplete="off" required>
-                            </div>
-
-                            <label for="" style="color:rgb(26,54,78)">Impuesto</label>
-                            <div class="input-group mb-3">
-                                <input type="number" class="form-control" min="1" name="isv_item" aria-describedby="basic-addon3" autocomplete="off">
-                            </div>
-
-                            <!-- Fin del body del modal -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <!-- Modal para editar un item -->
-        <form action="utilidades/editar-item.php?id_item=<?php echo $id ?>&id_orden=<?php echo  $result2['Ord_Num']  ?>" method="POST">
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLongTitle" style="color:rgb(26,54,78)">Actualizar Item</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Body del modal -->
-
-                            <?php
-                            while ($row = mysqli_fetch_array($query)) {
-                            ?>
-                                <label for="" style="color:rgb(26,54,78)">Descripcion</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" value="<?php echo $row['Desc_Item'] ?>" name="desc_orden" aria-describedby="basic-addon1" autocomplete="off">
-                                </div>
-
-                                <label for="" style="color:rgb(26,54,78)">Cantidad</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" value="<?php echo $row['Cnt_Item'] ?>" name="cant_orden" aria-describedby="basic-addon2" autocomplete="off">
-                                </div>
-                                <label for="" style="color:rgb(26,54,78)">Precio</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" value="<?php echo $row['Pre_Item'] ?>" name="precio_orden" aria-describedby="basic-addon3" autocomplete="off">
-                                </div>
-
-                            <?php } ?>
-                            <!-- Fin del body del modal -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" name="Guardar" class="btn btn-primary">Guardar</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <?php
-
-        if (isset(($_REQUEST['id_item']))) {
-            $id = $_REQUEST['id_item'];
-            if (!empty($id)) {
-                echo "<script>$('#exampleModal').modal({ show:true })</script>";
-            }
-        }
-
-        ?>
-
         <script>
             window.addEventListener('popstate', function(event) {
                 history.pushState(null, null, window.location = "dashboar.php");
@@ -746,10 +645,10 @@ while ($row = mysqli_fetch_array($query)) {
                 document.getElementById('ord-completada').style.display = "none";
 
             <?php
-            }else{
-                ?>
+            } else {
+            ?>
                 document.getElementById('ord-completada').style.display = "blovk";
-                <?php
+            <?php
             }
             ?>
         </script>

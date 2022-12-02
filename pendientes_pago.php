@@ -1,29 +1,19 @@
 <?php
 
 session_start();
-
 if (isset($_SESSION['username'])) {
     $usuario = $_SESSION['username'];
-} elseif (isset($_SESSION['username-2'])) {
-    $usuario2 = $_SESSION['username-2'];
 } elseif (isset($_SESSION['username-3'])) {
     $usuario3 = $_SESSION['username-3'];
 }
-
 //comprobacion de que exista una sesion activa
-if (!isset($usuario) && !isset($usuario2) && !isset($usuario3)) {
-    header("location:./login.php");
+if (!isset($usuario) && !isset($usuario3)) {
+    header("location:login.php");
 }
 
 include("utilidades/conexion.php");
 if (isset($_SESSION['username'])) {
     $sql = "SELECT * from usuarios where Usuario = '$usuario'";
-    $query = mysqli_query($con, $sql);
-    while ($row4 = mysqli_fetch_array($query)) {
-        $result = $row4;
-    }
-} elseif (isset($_SESSION['username-2'])) {
-    $sql = "SELECT * from usuarios where Usuario = '$usuario2'";
     $query = mysqli_query($con, $sql);
     while ($row4 = mysqli_fetch_array($query)) {
         $result = $row4;
@@ -60,7 +50,6 @@ if (isset($_SESSION['username'])) {
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 
-
 </head>
 
 <body id="page-top">
@@ -89,30 +78,14 @@ if (isset($_SESSION['username'])) {
                         Acciones
                     </div>
 
+
                     <!-- Nav Item - Utilities Collapse Menu -->
                     <li class="nav-item" id="ordenes-master">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities3" aria-expanded="true" aria-controls="collapseUtilities">
+                        <a class="nav-link collapsed" href="" aria-controls="collapseUtilities">
                             <i class="fas fa-business-time"></i>
                             <span>Ordenes Pendientes</span>
                         </a>
                         <div id="collapseUtilities3" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="ordenes_pendientes.php"> Ordenes Pendientes</a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="nav-item" id="ordenes-master-pagar">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities6" aria-expanded="true" aria-controls="collapseUtilities">
-                            <i class="fas fa-money-bill"></i>
-                            <span>Pendientes de Pago</span>
-                        </a>
-                        <div id="collapseUtilities6" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="pendientes_pago.php">Pagar Ordenes</a>
-                            </div>
                         </div>
                     </li>
 
@@ -128,20 +101,6 @@ if (isset($_SESSION['username'])) {
                             </div>
                         </div>
                     </li>
-                    
-                    <li class="nav-item" id="presupuestos">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities4" aria-expanded="true" aria-controls="collapseUtilities">
-                            <i class="fas fa-coins"></i>
-                            <span>Presupuestos</span>
-                        </a>
-                        <div id="collapseUtilities4" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Opciones:</h6>
-                                <a class="collapse-item" href="presupuestos.php"> Asignar Presupuesto</a>
-                            </div>
-                        </div>
-                    </li>
-
 
 
                     <!-- Nav Item - Utilities Collapse Menu -->
@@ -209,7 +168,7 @@ if (isset($_SESSION['username'])) {
                     <!-- Barra de Busqueda -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" id="buscar-ordenes" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
+                            <input type="text" id="buscar-pendientes" class="form-control bg-light border-0 small" placeholder="Buscar orden..." aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-primary-2" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -279,37 +238,13 @@ if (isset($_SESSION['username'])) {
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Ordenes Pendientes de Pago</h1>
                         <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generar Reporte</a> -->
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Ordenes Completadas</div>
-                                            <?php
-                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden where pagado = 1";
-                                            $query3 = mysqli_query($con, $sql3);
-                                            while ($row3 = mysqli_fetch_array($query3)) {
-                                            ?>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row3['ORDEN'] ?></div>
-                                            <?php
-                                            } ?>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-file fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-warning shadow h-100 py-2">
@@ -336,25 +271,23 @@ if (isset($_SESSION['username'])) {
                         </div>
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Usuarios Registrados</div>
-                                            <!-- Consulta para el numero total de usuarios registrados -->
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Ordenes Completadas</div>
                                             <?php
-                                            $sql2 = "SELECT COUNT(*) AS CUENTA FROM usuarios ";
-                                            $query2 = mysqli_query($con, $sql2);
-                                            while ($row2 = mysqli_fetch_array($query2)) {
+                                            $sql3 = "SELECT COUNT(*) AS ORDEN FROM orden where pagado = 1";
+                                            $query3 = mysqli_query($con, $sql3);
+                                            while ($row3 = mysqli_fetch_array($query3)) {
                                             ?>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row2['CUENTA'] ?></div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row3['ORDEN'] ?></div>
                                             <?php
-                                            }
-                                            ?>
+                                            } ?>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                                            <i class="fas fa-file fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -367,20 +300,19 @@ if (isset($_SESSION['username'])) {
                     <div class="row">
                     </div>
                     <div class="card shadow mb-4">
+                        <!-- Div donde se remplaza la tabla -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
+                        <!-- ----------------------------------------- -->
 
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
-                        <!-- ----------------------------------------------------------- -->
                         <?php
-                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov, total_orden from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where  Pagado = 1 order by orden.Ord_Num ASC;";
+                        $sql4 = "SELECT orden.Ord_Num,date_format(Fecha, '%d-%m-%Y') as Fecha, Desc_Orden, Nom_User,Nom_Prov, total_orden from orden inner join usuarios on usuarios.id = orden.Id_User inner join proveedores on proveedores.id_Prov = orden.Id_Prov where Pagado = 0 order by orden.Ord_Num Desc;";
                         $query = mysqli_query($con, $sql4);
                         ?>
-                        <table class='table tabla-ordenes' id='ordenes-table'>
+
+                        <table class='table tabla-ordenes' id='pendientes-table'>
                             <thead class='' style='background-color: rgb(26,54,78); color: white;'>
                                 <tr>
                                     <th class='text-center' scope='col'>No.</th>
@@ -389,20 +321,20 @@ if (isset($_SESSION['username'])) {
                                     <th class='text-center' scope='col'>Fecha</th>
                                     <th class='text-center' scope='col'>Descripcion Orden</th>
                                     <th class='text-center' scope='col'>Total</th>
-                                    <th class='text-center' scope='col'>Ver</th>
+                                    <th class='text-center' scope='col'>Acciones</th>
                             </thead>
                             <tbody>
                                 <?php
                                 while ($fila = mysqli_fetch_array($query)) {
                                 ?>
                                     <tr>
-                                        <td style='font-size: 12px' class='text-center'><?php echo $fila['Ord_Num'] ?></td>
+                                        <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Ord_Num'] ?></td>
                                         <td style='width:240px ; font-size: 14px' class='text-center'><?php echo $fila['Nom_User'] ?></td>
-                                        <td style='width:320px; font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
-                                        <td style=' width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
-                                        <td style=' width: 350px; font-size: 13px' class='text-center'><?php echo  $fila['Desc_Orden'] ?></td>
-                                        <td style='font-size: 13px;' class='text-center'><?php echo 'L.', number_format($fila['total_orden'], 2) ?></td>
-                                        <td class='text-center'><a href='ordenes_pagadas.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
+                                        <td style='font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
+                                        <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
+                                        <td style='font-size: 13px' class='text-center'><?php echo $fila['Desc_Orden'] ?></td>
+                                        <td style='font-size: 13px' class='text-center'><?php echo 'L.', number_format($fila['total_orden'],2) ?></td>
+                                        <td class='text-center'><a href='pagar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-info'><i class='fa fa-eye'></i></a>&nbsp; &nbsp;<a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -453,10 +385,12 @@ if (isset($_SESSION['username'])) {
     </div>
 
     <!-- Bootstrap core JavaScript-->
+    <script src="js/pendientes.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
     <!-- Deshabilitar paginas para el usuario normal -->
 
     <script>
@@ -465,28 +399,21 @@ if (isset($_SESSION['username'])) {
         ?>
             document.getElementById('usuarios-op').style.display = "block";
             document.getElementById('proveedores-op').style.display = "block";
-            document.getElementById('ordenes-master').style.display = "block";
-            document.getElementById('ordenes-master-pagar').style.display = "none";
+            document.getElementById('orden-detalle-op').style.display = "block";
+            document.getElementById('ordenes-master').style.display = "none";
 
         <?php } elseif ($result['rol'] == 2) {
         ?>
             document.getElementById('usuarios-op').style.display = "none";
-            document.getElementById('presupuestos').style.display = "none";
             document.getElementById('proveedores-op').style.display = "none";
-            document.getElementById('ordenes-master').style.display = "none";
             document.getElementById('orden-detalle-op').style.display = "none";
-            document.getElementById('ordenes-master-pagar').style.display = "none";
+            document.getElementById('ordenes-master').style.display = "none";
 
         <?php } elseif ($result['rol'] == 3) {
         ?>
             document.getElementById('ordenes-master').style.display = "block";
-            document.getElementById('presupuestos').style.display = "block";
-            document.getElementById('ordenes-master-pagar').style.display = "block";
-
         <?php } ?>
     </script>
-
-    <script src="js/ordenes.js"></script>
 
 </body>
 

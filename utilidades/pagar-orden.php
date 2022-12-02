@@ -18,19 +18,18 @@
 
 <?php
 include("conexion.php");
-
+$presupuesto = $_REQUEST['presupuesto'];
 $orden = base64_decode($_REQUEST['id_orden']);
-$autorizado = base64_decode($_REQUEST['id_autorizado']);
 
-$sql = "UPDATE  orden set Pagado = 1, autorizado = '$autorizado' WHERE Ord_Num = $orden";
+$sql = "UPDATE  orden set Pagado = 1, Id_Pres = $presupuesto WHERE Ord_Num = $orden";
 $query = mysqli_query($con, $sql);
 
 if($query){
     echo '<script>
     Swal.fire({
         icon: "success",
-        title: "Orden Completada",
-        text: "Se ha completado la orden",
+        title: "Orden Pagada",
+        text: "Se ha pagado la orden",
       }).then(function(){
         window.location = "../ordenes_pendientes.php";
       })

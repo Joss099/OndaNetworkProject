@@ -7,7 +7,7 @@ $fecha = $_REQUEST['fecha'];
 $proveedor = $_REQUEST['proveedor'];
 $pago = $_REQUEST['pago'];
 $responsable = base64_decode($_REQUEST['id_usuario']);
-$presupuesto = $_REQUEST['presupuesto'];
+// $presupuesto = $_REQUEST['presupuesto'];
 $observaciones = $_REQUEST['observaciones'];
 $reglon = $_REQUEST['reglon'];
 $descripcion = $_REQUEST['descripcion2'];
@@ -32,7 +32,7 @@ for ($y = 0; $y < count($cantidad); $y++) {
 //Inicio de 
 if ($total_orden <= $evaluar['total_pres']) {
   //Insertar primero los datos de la orden 
-  $orden = "INSERT INTO orden (Ord_Num, Fecha, Id_Prov, Id_Tip_pag, Id_User, Id_Pres, Observaciones, Id_Reglon, Desc_Orden, Pagado, total_orden ) values($no_orden,'$fecha', $proveedor, $pago , $responsable, $presupuesto,'$observaciones',$reglon, '$descripcion', 0, 0)";
+  $orden = "INSERT INTO orden (Ord_Num, Fecha, Id_Prov, Id_Tip_pag, Id_User, Observaciones, Id_Reglon, Desc_Orden, Pagado, total_orden ) values($no_orden,'$fecha', $proveedor, $pago , $responsable, '$observaciones',$reglon, '$descripcion', 0, 0)";
   $query1 = mysqli_query($con, $orden);
 
   //Si se inserta la orden se agregan los items
