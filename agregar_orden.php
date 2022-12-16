@@ -345,7 +345,7 @@ if (isset($_SESSION['username'])) {
                                             WHERE (total_pres>0) AND estado = 0";
                                             $query5 = mysqli_query($con, $sql5);
                                             while ($row5 = mysqli_fetch_array($query5)) {
-                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'].'  &nbsp; ('.number_format($row5['total_pres'], 2).')</option>';
+                                                echo '<option value="' . $row5['Id_Reglon'] . '">' . $row5['Descripcion del Reglon'] . '  &nbsp; (' . number_format($row5['total_pres'], 2) . ')</option>';
                                             }
                                             ?>
                                         </select>
@@ -385,7 +385,7 @@ if (isset($_SESSION['username'])) {
                                     <tbody>
                                         <tr class="input_principal clonar">
                                             <td style="font-size: 13px" class="text-center"><input name="DESCRIPCION[]" class="form-control" type="text"></td>
-                                            <td style="font-size: 15px;" class="text-center"><input name="CANTIDAD[]" class="form-control text-center cantidad" value="0" type="number" autocomplete="off" min=1></td>
+                                            <td style="font-size: 15px;" class="text-center"><input name="CANTIDAD[]" id="CANTIDAD" class="form-control text-center cantidad" value="0" type="number" autocomplete="off" min=1></td>
                                             <td style="font-size: 15px" class="text-center"><input name="PRECIO[]" class="form-control text-center precio" value="0" type="number" min=1></td>
                                             <td style="font-size: 15px" class="text-center"><input name="IMPUESTO[]" class="form-control text-center total" value="0" type="number" autocomplete="off" min=1></td>
                                             <td><span class="btn btn-danger puntero ocultar">Eliminar</span></td>
@@ -402,12 +402,27 @@ if (isset($_SESSION['username'])) {
                                         <a id="btn-agregar-inp" class="btn btn-info add_button"><i class="fas fa-sharp fa-solid fa-plus">&nbsp; Agregar Item </i></a>
                                     </div>
                                 </div>
+                                <a id="calculartotal" class="btn btn-warning add_button">Calcular Subtotal</a>
                                 <br>
+                                <div id="resp"></div>
 
                                 <div class="form-group guardar">
                                     <input type="submit" id="guardarOrden" value="Guardar Orden" class="btn btn-primary">
                         </form>
                     </div>
+
+                    <script>
+                        $('#calculartotal').click(function() {
+                            $.ajax({
+                                url: "utilidades/calcular-total.php",
+                                type: "post",
+                                data: $("#form-orden").serialize(),
+                                success: function(resultado) {
+                                    $("#resp").html(resultado);
+                                }
+                            });
+                        });
+                    </script>
 
                     <!-- ------------------------------------------------------- -->
                     <!-- ------------------------------------------------------- -->
@@ -522,7 +537,7 @@ if (isset($_SESSION['username'])) {
                 let clonado = document.querySelector('.clonar');
                 let clon = clonado.cloneNode(true);
 
-                contenido.appendChild(clon).classList.remove('clonar');
+                contenido.appendChild(clon).classList.remove('.clonar');
             });
 
             contenido.addEventListener('click', e => {
@@ -545,9 +560,9 @@ if (isset($_SESSION['username'])) {
                     method: 'POST'
                 };
                 fetch('utilidades/agregar-orden.php?id_usuario=<?php echo base64_encode($result['id']) ?>', peticion)
-                .then(res => res.json())
+                    .then(res => res.json())
                     .then(res => {
-                        if (res['respuesta'] ) {
+                        if (res['respuesta']) {
                             Swal.fire({
                                 icon: "success",
                                 title: "Guardado Correctamente",

@@ -333,8 +333,8 @@ if (isset($_SESSION['username'])) {
                                         <td style='font-size: 13px' class='text-center'><?php echo $fila['Nom_Prov'] ?></td>
                                         <td style='width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
                                         <td style='font-size: 13px' class='text-center'><?php echo $fila['Desc_Orden'] ?></td>
-                                        <td style='font-size: 13px' class='text-center'><?php echo 'L.', number_format($fila['total_orden'],2) ?></td>
-                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-info'><i class='fa fa-eye'></i></a>&nbsp; &nbsp;<a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num']?>' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
+                                        <td style='font-size: 13px' class='text-center'><?php echo 'L.', number_format($fila['total_orden'], 2) ?></td>
+                                        <td class='text-center'><a href='editar_ordenes.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-eye'></i></a>&nbsp; &nbsp;<a href='ordenes_pendientes.php?id_orden=<?php echo base64_encode($fila['Ord_Num']) ?>' class='btn btn-danger'><i class='fa fa-trash'></i></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -390,6 +390,41 @@ if (isset($_SESSION['username'])) {
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Modal Eliminar Usuario -->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Eliminar Orden</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Seguro que deseas eliminar esta orden?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <?php $id = base64_decode($_REQUEST['id_orden']); ?>
+                    <a href="utilidades/eliminar-orden.php?id_orden=<?php echo base64_encode($id) ?>" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Eliminar ordenes -->
+        <?php
+
+if (isset(($_REQUEST['id_orden']))) {
+    $id = $_REQUEST['id_orden'];
+    if (!empty($id)) {
+        echo "<script>$('#exampleModalCenter2').modal({ show:true })</script>";
+    }
+}
+
+?>
+
 
     <!-- Deshabilitar paginas para el usuario normal -->
 

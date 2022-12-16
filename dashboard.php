@@ -402,7 +402,7 @@ if (isset($_SESSION['username'])) {
                                         <td style=' width: 100px; font-size: 12px' class='text-center'><?php echo $fila['Fecha'] ?></td>
                                         <td style=' width: 350px; font-size: 13px' class='text-center'><?php echo  $fila['Desc_Orden'] ?></td>
                                         <td style='font-size: 13px;' class='text-center'><?php echo 'L.', number_format($fila['total_orden'], 2) ?></td>
-                                        <td class='text-center'><a href='ordenes_pagadas.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
+                                        <td class='text-center'><a href='ordenes_completadas.php?id_orden=<?php echo $fila['Ord_Num'] ?>' class='btn btn-info'><i class='fa fa-thin fa-eye' fa></i></a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

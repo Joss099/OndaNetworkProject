@@ -26,12 +26,12 @@ if (empty($_REQUEST['id_orden'])) {
 $id_orden =  $_GET['id_orden'];
 $sql = "SELECT Num_Item, Pre_Item, Tot_Item,tot_Isv, isv_Item, orden.Ord_Num, Desc_Item, Cnt_Item,Iva_Item,
 date_format(Fecha, '%d-%m-%Y') as Fecha, Nom_Prov, Nom_Tip_Pag, Nom_User,
-date_format(fecha_pag, '%d-%m-%Y') as fecha_pag,
+date_format(fecha_pag, '%d-%m-%Y') as fecha_pag, Desc_Pres,
 Observaciones, `Descripcion del Reglon`, Desc_Orden, Pagado, autorizado
 from orden inner join proveedores on proveedores.id_Prov = orden.Id_Prov inner join
 orden_detalle on orden_detalle.Ord_Num = orden.Ord_Num inner join tipo_pago on
 tipo_pago.Id_Tip_Pag = orden.Id_Tip_Pag inner join usuarios on
-usuarios.id = orden.Id_User inner join reglon_presupuestario on 
+usuarios.id = orden.Id_User inner join `tipo de presupuesto`  on `tipo de presupuesto`.Id_Pres = orden.Id_Pres inner join reglon_presupuestario on 
 reglon_presupuestario.Id_Reglon = orden.Id_Reglon WHERE orden.Ord_Num = $id_orden order by orden.Ord_Num;";
 $query = mysqli_query($con, $sql);
 
@@ -332,23 +332,10 @@ while ($row = mysqli_fetch_array($query)) {
                                     <input value="<?php echo $result2['Fecha'] ?>" type="date" class="form-control fecha" name="fecha" id="fecha" autocomplete="off">
                                 </div>
 
-                                <!-- <div class="form-group" id="presupuesto">
+                                <div class="form-group" id="presupuesto">
                                     <label for="exampleInput">Presupuesto</label>
                                     <input value="<?php echo $result2['Desc_Pres'] ?>" type="text" class="form-control presupuesto" name="presupuesto" id="presupuesto" autocomplete="off" disabled>
-                                </div> -->
-
-                                <div class="form-group" id="presupuesto-sneditar">
-                                    <label for="exampleInput">Presupuesto</label>
-                                    <select class="form-control presupuesto" name="presupuesto">
-                                        <?php
-                                        $sql5 = "SELECT * FROM `tipo de presupuesto`";
-                                        $query5 = mysqli_query($con, $sql5);
-                                        while ($row5 = mysqli_fetch_array($query5)) {
-                                            echo '<option value="' . $row5['Id_Pres'] . '">' . $row5['Desc_Pres'] . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+                                </div> 
                                 <div class="form-group" id="reglon-sneditar">
                                     <label for="exampleInput">Reglon Presupuestario</label>
                                     <input value="<?php echo $result2['Descripcion del Reglon'] ?>" type="text" class="form-control reglon" name="reglon" id="reglon" autocomplete="off" disabled>
